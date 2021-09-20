@@ -29,7 +29,10 @@ void loop() {
   //sprintf(buf, "sensorState=%d\n", sensorState);
   //Serial.write(buf);
   Serial.println(5*sensorState);  // use Serial.println for use with "Serial Plotter"
-  delay(5);
-  digitalWrite(LED_BUILTIN, LOW);    // switch LED off
-  delay(5);
+  if(sensorState==HIGH)
+  {  
+    delay(5);
+    digitalWrite(LED_BUILTIN, LOW);    // switch LED off
+    delay(5);
+  }
 }
