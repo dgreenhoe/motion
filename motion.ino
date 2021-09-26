@@ -1,5 +1,5 @@
 //=============================================================================
-// Motion Detection
+// Motion Detection using PIR
 //
 // \author Daniel J. Greenhoe
 //
@@ -33,14 +33,16 @@
 // 
 //=============================================================================
 
-const int sensorPIR = 3;
+const int digitalPin = 3;
+const int analogPin  = A3;
 //-----------------------------------------------------------------------------
 // \brief Setup
 //-----------------------------------------------------------------------------
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT); // configure digital pin LED_BUILTIN as an output
-  pinMode(sensorPIR,  INPUT);   // configure digital pin sensor as an input
+  pinMode(digitalPin,  INPUT);   // configure digital pin sensor as an input
+  digitalWrite(LED_BUILTIN, LOW);    // switch LED off
   Serial.begin(9600);
 }
 
@@ -50,20 +52,18 @@ void setup()
 void loop() {
   char buf[128];
   char buf2[128];
-//int sensorState = digitalRead(sensorPIR);
-  int sensorState = analogRead(sensorPIR);
-  float outVal = (float)sensorState/4095.0;
-  delay(5);
-  digitalWrite(LED_BUILTIN, HIGH);   // switch LED on
-  dtostrf(outVal,6,2,buf2);
+//int sensorState = digitalRead(digitalPin);
+  int sensorState = analogRead(analogPin);
+  float outVal = 5.0 * (float)sensorState / 1024.0;
+  dtostrf(outVal,8,3,buf2);
   sprintf(buf, "sensorState=%d  %s\n", sensorState, buf2);
-  Serial.write(buf);
+  //Serial.write(buf);
   //Serial.println(5*sensorState);  // use Serial.println for use with "Serial Plotter"
-  //Serial.println(outVal);  // use Serial.println for use with "Serial Plotter"
-  if(sensorState==HIGH)
+  Serial.println(outVal);  // use Serial.println for use with "Serial Plotter"
+  if(sensorState>500)
   {  
+    digitalWrite(LED_BUILTIN, HIGH);   // switch LED on
     delay(5);
     digitalWrite(LED_BUILTIN, LOW);    // switch LED off
-    delay(5);
   }
 }
