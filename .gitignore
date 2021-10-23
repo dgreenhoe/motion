@@ -1,3 +1,5 @@
 *.jpg
 *.dip~
 *.eli~
+Sound/*
+Doc/*
