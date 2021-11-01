@@ -4,3 +4,8 @@
 Sound/*
 Doc/*
 *.dch~
+*.lib~
+tmp.*
+DipTrace/NUCLEO-F429ZI.eli
+DipTrace/motion.dch
+DipTrace/motion.dip
