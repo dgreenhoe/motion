@@ -174,30 +174,37 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+//  __HAL_RCC_TIM3_CLK_ENABLE();
+//  HAL_TIM_ConfigClockSource();
+//  //HAL_TIM_Base_MspInit();
+//  HAL_TIM_Base_Init();
+//  //HAL_TIM_IC_MspInit();
+//  HAL_TIM_IC_Init();
+//  HAL_TIM_IC_Start();
   while (1)
   {
     //LED_test();
     /* USER CODE END WHILE */
-    LED_RED_TOGGLE ; HAL_Delay(  5);
-    TX_0_TOGGLE    ; HAL_Delay(  5);
-    TX_1_TOGGLE    ; HAL_Delay(  5);
-    TX_2_TOGGLE    ; HAL_Delay(  5);
-    TX_3_TOGGLE    ; HAL_Delay(  5);
-    TX_4_TOGGLE    ; HAL_Delay(  5);
-    TX_5_TOGGLE    ; HAL_Delay(  5);
-    TX_6_TOGGLE    ; HAL_Delay(  5);
-    TX_7_TOGGLE    ; HAL_Delay(  5);
-    LED_0_TOGGLE   ; HAL_Delay(  5);
-    LED_1_TOGGLE   ; HAL_Delay(  5);
-    LED_2_TOGGLE   ; HAL_Delay(  5);
-    LED_3_TOGGLE   ; HAL_Delay(  5);
-    LED_4_TOGGLE   ; HAL_Delay(  5);
-    LED_5_TOGGLE   ; HAL_Delay(  5);
-    LED_6_TOGGLE   ; HAL_Delay(  5);
-    LED_7_TOGGLE   ; HAL_Delay(  5);
-    LED_RED_TOGGLE ; HAL_Delay(355);
-    LED_YLW_TOGGLE ; HAL_Delay(350);
-    LED_GRN_TOGGLE ; HAL_Delay(250);
+    LED_Red_Toggle() ; HAL_Delay(  5);
+    Tx_0_Toggle()    ; HAL_Delay(  5);
+    Tx_1_Toggle()    ; HAL_Delay(  5);
+    Tx_2_Toggle()    ; HAL_Delay(  5);
+    Tx_3_Toggle()    ; HAL_Delay(  5);
+    Tx_4_Toggle()    ; HAL_Delay(  5);
+    Tx_5_Toggle()    ; HAL_Delay(  5);
+    Tx_6_Toggle()    ; HAL_Delay(  5);
+    Tx_7_Toggle()    ; HAL_Delay(  5);
+    LED_0_Toggle()   ; HAL_Delay(  5);
+    LED_1_Toggle()   ; HAL_Delay(  5);
+    LED_2_Toggle()   ; HAL_Delay(  5);
+    LED_3_Toggle()   ; HAL_Delay(  5);
+    LED_4_Toggle()   ; HAL_Delay(  5);
+    LED_5_Toggle()   ; HAL_Delay(  5);
+    LED_6_Toggle()   ; HAL_Delay(  5);
+    LED_7_Toggle()   ; HAL_Delay(  5);
+    LED_Red_Toggle() ; HAL_Delay(355);
+    LED_Ylw_Toggle() ; HAL_Delay(350);
+    LED_Grn_Toggle() ; HAL_Delay(250);
 
     /* USER CODE BEGIN 3 */
   }
