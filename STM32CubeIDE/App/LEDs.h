@@ -4,7 +4,7 @@
 // 
 //=============================================================================
 
-void LED_test(void);
+//extern "C" void LED_test(void);
 
 void LED_Ylw_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1 ); }
 void LED_Red_Toggle(void){ HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); }

@@ -20,7 +20,7 @@
 #include "main.h"
 #include "LEDs.h"
 #include "string.h"
-
+void LED_test(void);
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -183,29 +183,8 @@ int main(void)
 //  HAL_TIM_IC_Start();
   while (1)
   {
-    //LED_test();
+    LED_test();
     /* USER CODE END WHILE */
-    LED_Red_Toggle() ; HAL_Delay(  5);
-    Tx_0_Toggle()    ; HAL_Delay(  5);
-    Tx_1_Toggle()    ; HAL_Delay(  5);
-    Tx_2_Toggle()    ; HAL_Delay(  5);
-    Tx_3_Toggle()    ; HAL_Delay(  5);
-    Tx_4_Toggle()    ; HAL_Delay(  5);
-    Tx_5_Toggle()    ; HAL_Delay(  5);
-    Tx_6_Toggle()    ; HAL_Delay(  5);
-    Tx_7_Toggle()    ; HAL_Delay(  5);
-    LED_0_Toggle()   ; HAL_Delay(  5);
-    LED_1_Toggle()   ; HAL_Delay(  5);
-    LED_2_Toggle()   ; HAL_Delay(  5);
-    LED_3_Toggle()   ; HAL_Delay(  5);
-    LED_4_Toggle()   ; HAL_Delay(  5);
-    LED_5_Toggle()   ; HAL_Delay(  5);
-    LED_6_Toggle()   ; HAL_Delay(  5);
-    LED_7_Toggle()   ; HAL_Delay(  5);
-    LED_Red_Toggle() ; HAL_Delay(355);
-    LED_Ylw_Toggle() ; HAL_Delay(350);
-    LED_Grn_Toggle() ; HAL_Delay(250);
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
