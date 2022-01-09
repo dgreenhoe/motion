@@ -15,11 +15,12 @@
   *
   ******************************************************************************
   */
+#include <stdio.h>
+#include "io.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -27,7 +28,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+void LED_test(void);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -128,7 +129,7 @@ static void MX_ADC1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  int cntr=0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -180,13 +181,14 @@ int main(void)
 //  //HAL_TIM_IC_MspInit();
 //  HAL_TIM_IC_Init();
 //  HAL_TIM_IC_Start();
+  printf("Hello World!\r\n");
   while (1)
   {
     LED_test();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-   LED_test();
+   printf("cntr = %d\r\n", cntr++);
   }
   /* USER CODE END 3 */
 }
