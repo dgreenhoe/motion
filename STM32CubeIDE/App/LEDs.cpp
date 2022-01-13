@@ -12,10 +12,10 @@ void LED_test(void)
 {
   LED_Red_Toggle() ; HAL_Delay(5);
   Tx_Toggle( 5 )   ;
-  LED_Toggle( 5 )  ;
+//LED_Toggle( 5 )  ;
   LED_Red_Toggle() ; HAL_Delay(355);
-  LED_Ylw_Toggle() ; HAL_Delay(350);
-  LED_Grn_Toggle() ; HAL_Delay(250);
+  //LED_Ylw_Toggle() ; HAL_Delay(350);
+  //LED_Grn_Toggle() ; HAL_Delay(250);
 }
 
 //-----------------------------------------------------------------------------

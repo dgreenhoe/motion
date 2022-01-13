@@ -181,14 +181,26 @@ int main(void)
 //  //HAL_TIM_IC_MspInit();
 //  HAL_TIM_IC_Init();
 //  HAL_TIM_IC_Start();
-  printf("Hello World!\r\n");
+  printf("=======================\r\n");
+  printf("| Laser Motion Sensor |\r\n");
+  printf("=======================\r\n");
+  Menu_Options( );
+  uint8_t oneChar;
   while (1)
   {
     LED_test();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-   printf("cntr = %d\r\n", cntr++);
+   if( getcharnb( &oneChar ) == 1 )
+   {
+     printf("Laser Motion Sensor cntr = %d  oneChar = %d = %02x ('%c')\r\n", cntr++, oneChar, oneChar, (char)oneChar);
+     Menu_Processing( oneChar );
+   }
+   else
+   {
+     //printf(".\r");
+   }
   }
   /* USER CODE END 3 */
 }
