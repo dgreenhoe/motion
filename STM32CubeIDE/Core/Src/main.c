@@ -178,7 +178,8 @@ int main(void)
   MX_TIM6_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  DMA_Config( &hdac1, &hdma_dac1_ch1 );
+  DMA_Config( &hdac1, &hdma_dac1_ch1, DMA1_Stream0 );
+  DMA_Config( &hdac1, &hdma_dac1_ch2, DMA1_Stream1 );
   /* USER CODE END 2 */
 
   /* Infinite loop */
