@@ -136,7 +136,6 @@ static void MX_ADC1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  int cntr=0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -205,13 +204,13 @@ int main(void)
 
   while (1)
   {
-    LED_test();
+    //LED_test();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
    if( getcharnb( &oneChar ) == 1 )
    {
-     printf("Laser Motion Sensor cntr = %d  oneChar = %d = %02x ('%c')\r\n", cntr++, oneChar, oneChar, (char)oneChar);
+     //printf("Laser Motion Sensor cntr = %d  oneChar = %d = %02x ('%c')\r\n", cntr++, oneChar, oneChar, (char)oneChar);
      Menu_Processing( oneChar );
    }
    else

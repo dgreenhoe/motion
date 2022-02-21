@@ -37,65 +37,59 @@ int getcharnb(uint8_t * oneChar)
 }
 
 //-----------------------------------------------------------------------------
-// \brief Display menu options
+// !\brief Display menu options
 //-----------------------------------------------------------------------------
 int Menu_Options(void)
 {
   printf("Menu Options:\r\n");
-  printf("  r: Toggle Red LED\r\n");
-  printf("  y: Toggle Yellow LED\r\n");
-  printf("  g: Toggle Green LED\r\n");
-  printf("  0: Toggle LED 0\r\n");
-  printf("  1: Toggle LED 1\r\n");
-  printf("  2: Toggle LED 2\r\n");
-  printf("  3: Toggle LED 3\r\n");
-  printf("  4: Toggle LED 4\r\n");
-  printf("  5: Toggle LED 5\r\n");
-  printf("  6: Toggle LED 6\r\n");
-  printf("  7: Toggle LED 7\r\n");
+  printf("  r: Toggle Red LED\r\n"    );
+  printf("  y: Toggle Yellow LED\r\n" );
+  printf("  g: Toggle Green LED\r\n"  );
+  printf("  0: Toggle LED 0\r\n"      );
+  printf("  1: Toggle LED 1\r\n"      );
+  printf("  2: Toggle LED 2\r\n"      );
+  printf("  3: Toggle LED 3\r\n"      );
+  printf("  4: Toggle LED 4\r\n"      );
+  printf("  5: Toggle LED 5\r\n"      );
+  printf("  6: Toggle LED 6\r\n"      );
+  printf("  7: Toggle LED 7\r\n"      );
+  printf("  ): Toggle Tx 0\r\n"       );
+  printf("  !: Toggle Tx 1\r\n"       );
+  printf("  @: Toggle Tx 2\r\n"       );
+  printf("  #: Toggle Tx 3\r\n"       );
+  printf("  $: Toggle Tx 4\r\n"       );
+  printf("  %%: Toggle Tx 5\r\n"       );
+  printf("  ^: Toggle Tx 6\r\n"       );
+  printf("  &: Toggle Tx 7\r\n"       );
   return 0;
 }
 
 //-----------------------------------------------------------------------------
-// \brief Display menu options
+//! \brief Display menu options
 //-----------------------------------------------------------------------------
 int Menu_Processing( uint8_t oneChar )
 {
   switch( oneChar )
   {
-    case 'r':
-      LED_Red_Toggle();
-      break;
-    case 'g':
-      LED_Grn_Toggle();
-      break;
-    case 'y':
-      LED_Ylw_Toggle();
-      break;
-    case '0':
-      LED_0_Toggle();
-      break;
-    case '1':
-      LED_1_Toggle();
-      break;
-    case '2':
-      LED_2_Toggle();
-      break;
-    case '3':
-      LED_3_Toggle();
-      break;
-    case '4':
-      LED_4_Toggle();
-      break;
-    case '5':
-      LED_5_Toggle();
-      break;
-    case '6':
-      LED_6_Toggle();
-      break;
-    case '7':
-      LED_7_Toggle();
-      break;
+    case 'r':  printf("Toggle Red LED\r\n"    ); LED_Red_Toggle();  break;
+    case 'g':  printf("Toggle Green LED\r\n"  ); LED_Grn_Toggle();  break;
+    case 'y':  printf("Toggle Yellow LED\r\n" ); LED_Ylw_Toggle();  break;
+    case '0':  printf("Toggle LED 0\r\n"      ); LED_0_Toggle()  ;  break;
+    case '1':  printf("Toggle LED 1\r\n"      ); LED_1_Toggle()  ;  break;
+    case '2':  printf("Toggle LED 2\r\n"      ); LED_2_Toggle()  ;  break;
+    case '3':  printf("Toggle LED 3\r\n"      ); LED_3_Toggle()  ;  break;
+    case '4':  printf("Toggle LED 4\r\n"      ); LED_4_Toggle()  ;  break;
+    case '5':  printf("Toggle LED 5\r\n"      ); LED_5_Toggle()  ;  break;
+    case '6':  printf("Toggle LED 6\r\n"      ); LED_6_Toggle()  ;  break;
+    case '7':  printf("Toggle LED 7\r\n"      ); LED_7_Toggle()  ;  break;
+    case ')':  printf("Toggle Tx 0\r\n"       ); Tx_0_Toggle()   ;  break;
+    case '!':  printf("Toggle Tx 1\r\n"       ); Tx_1_Toggle()   ;  break;
+    case '@':  printf("Toggle Tx 2\r\n"       ); Tx_2_Toggle()   ;  break;
+    case '#':  printf("Toggle Tx 3\r\n"       ); Tx_3_Toggle()   ;  break;
+    case '$':  printf("Toggle Tx 4\r\n"       ); Tx_4_Toggle()   ;  break;
+    case '%':  printf("Toggle Tx 5\r\n"       ); Tx_5_Toggle()   ;  break;
+    case '^':  printf("Toggle Tx 6\r\n"       ); Tx_6_Toggle()   ;  break;
+    case '&':  printf("Toggle Tx 7\r\n"       ); Tx_7_Toggle()   ;  break;
   }
   return 0;
 }
