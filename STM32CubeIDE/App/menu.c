@@ -15,25 +15,17 @@ extern UART_HandleTypeDef huart3;
 int Menu_Options(void)
 {
   printf("Menu Options:\r\n");
-  printf("  r: Toggle Red LED\r\n"    );
-  printf("  y: Toggle Yellow LED\r\n" );
-  printf("  g: Toggle Green LED\r\n"  );
-  printf("  0: Toggle LED 0\r\n"      );
-  printf("  1: Toggle LED 1\r\n"      );
-  printf("  2: Toggle LED 2\r\n"      );
-  printf("  3: Toggle LED 3\r\n"      );
-  printf("  4: Toggle LED 4\r\n"      );
-  printf("  5: Toggle LED 5\r\n"      );
-  printf("  6: Toggle LED 6\r\n"      );
-  printf("  7: Toggle LED 7\r\n"      );
-  printf("  ): Toggle Tx 0\r\n"       );
-  printf("  !: Toggle Tx 1\r\n"       );
-  printf("  @: Toggle Tx 2\r\n"       );
-  printf("  #: Toggle Tx 3\r\n"       );
-  printf("  $: Toggle Tx 4\r\n"       );
-  printf("  %%: Toggle Tx 5\r\n"       );
-  printf("  ^: Toggle Tx 6\r\n"       );
-  printf("  &: Toggle Tx 7\r\n"       );
+  printf("  r: Toggle Red LED     ");   printf("  g: Toggle Green LED\r\n"  );
+  printf("  y: Toggle Yellow LED  ");   printf("\r\n"                       );
+  printf("  0: Toggle LED 0       ");   printf("  4: Toggle LED 4\r\n"      );
+  printf("  1: Toggle LED 1       ");   printf("  5: Toggle LED 5\r\n"      );
+  printf("  2: Toggle LED 2       ");   printf("  6: Toggle LED 6\r\n"      );
+  printf("  3: Toggle LED 3       ");   printf("  7: Toggle LED 7\r\n"      );
+  printf("  ): Toggle Tx 0        ");   printf("  $: Toggle Tx 4\r\n"       ); 
+  printf("  !: Toggle Tx 1        ");   printf("  %%: Toggle Tx 5\r\n"      );
+  printf("  @: Toggle Tx 2        ");   printf("  ^: Toggle Tx 6\r\n"       ); 
+  printf("  #: Toggle Tx 3        ");   printf("  &: Toggle Tx 7\r\n"       );
+  printf("  R: Read Rx values     ");   printf("  T: Read Tx values\r\n"    );
   return 0;
 }
 
@@ -65,8 +57,18 @@ int Menu_Processing( const uint8_t oneChar )
     case '%':  printf("Toggle Tx 5\r\n"       ); Tx_Toggle( 5 )  ;  break;
     case '^':  printf("Toggle Tx 6\r\n"       ); Tx_Toggle( 6 )  ;  break;
     case '&':  printf("Toggle Tx 7\r\n"       ); Tx_Toggle( 7 )  ;  break;
-    case 'R':  printf("Read Tx values: ");
-               for( i=0; i<8; i++ ) printf("%d", Tx_ReadState(i) );
+    case 'T':  printf("Read Tx values: ");
+               for( i=0; i<8; i++ ) { 
+                 printf("%d", Tx_ReadState(i) ); 
+                 if( i==3 ) printf(" ");
+               }
+               printf("\r\n");
+               break;
+    case 'R':  printf("Read Rx values: ");
+               for( i=0; i<8; i++ ) { 
+                 printf("%d", Rx_ReadState(i) ); 
+                 if( i==3 ) printf(" ");
+               }
                printf("\r\n");
                break;
     default :  printf("Char = %02X = %d ('%c')\r\n", oneChar, oneChar, oneChar ); break;

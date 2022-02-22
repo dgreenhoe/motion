@@ -87,6 +87,28 @@ int Tx_ReadState( int n )
 }
 
 //-----------------------------------------------------------------------------
+//! \brief Read Tx<n> laser state
+//-----------------------------------------------------------------------------
+int Rx_ReadState( int n )
+{
+  GPIO_PinState PinState = GPIO_PIN_SET;
+  switch( n )
+  {
+    case 0 : PinState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6  ); break;
+    case 1 : PinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9  ); break;
+    case 2 : PinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_6  ); break;
+    case 3 : PinState = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10 ); break;
+    case 4 : PinState = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11 ); break;
+    case 5 : PinState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0  ); break;
+    case 6 : PinState = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12 ); break;
+    case 7 : PinState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_6  ); break;
+    default: TxRx_ErrorHandler();
+  }
+  const int  RetValue = ( PinState==GPIO_PIN_RESET )? 0 : 1 ;
+  return     RetValue;
+}
+
+//-----------------------------------------------------------------------------
 //! \brief Set Tx<n> laser LOW
 //-----------------------------------------------------------------------------
 static void TxRx_ErrorHandler(void)
