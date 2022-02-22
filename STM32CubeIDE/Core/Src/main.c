@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "io.h"
 #include "dma.h"
+#include "menu.h"
 
 /* USER CODE END Includes */
 
