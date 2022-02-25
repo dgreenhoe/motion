@@ -6,24 +6,83 @@
 #include <stdio.h>
 
 static void TxRx_ErrorHandler(void);
+static void Tx_SetLowHigh( uint8_t ControlByte );
+
+GPIO_TypeDef* TxBus[] =
+{
+  GPIOF,
+  GPIOF,
+  GPIOF,
+  GPIOF,
+  GPIOF,
+  GPIOC,
+  GPIOF,
+  GPIOF
+};
+
+uint16_t TxPin[] =
+{
+  GPIO_PIN_3 ,
+  GPIO_PIN_6 ,
+  GPIO_PIN_9 ,
+  GPIO_PIN_7 ,
+  GPIO_PIN_8 ,
+  GPIO_PIN_12,
+  GPIO_PIN_10,
+  GPIO_PIN_0
+};
+
+GPIO_TypeDef* RxBus[] =
+{
+  GPIOA,
+  GPIOE,
+  GPIOE,
+  GPIOB,
+  GPIOB,
+  GPIOA,
+  GPIOD,
+  GPIOA
+};
+
+GPIO_TypeDef* RxPin[] =
+{
+  GPIO_PIN_6 ,
+  GPIO_PIN_9 ,
+  GPIO_PIN_6 ,
+  GPIO_PIN_10,
+  GPIO_PIN_11,
+  GPIO_PIN_0 ,
+  GPIO_PIN_12,
+  GPIO_PIN_6
+};
+
+//-----------------------------------------------------------------------------
+//! \brief Set TX_n in accordance with bit_n of <ControlByte>
+//-----------------------------------------------------------------------------
+void Tx_SetLowHigh( uint8_t ControlByte )
+{
+  uint8_t Mask = 0x01;
+  GPIO_TypeDef* Bus;
+  uint16_t      Pin;
+  GPIO_PinState State;
+  for( int i=0; i<8; i++ )
+  {
+    Bus   = TxBus[i];
+    Pin   = TxPin[i];
+    State = ( ControlByte & Mask )? GPIO_PIN_SET : GPIO_PIN_RESET;
+    HAL_GPIO_WritePin(  Bus, Pin, State );
+    Mask <<= 1;
+  }
+}
 
 //-----------------------------------------------------------------------------
 //! \brief Toggle Tx<n> laser state
 //-----------------------------------------------------------------------------
 void Tx_Toggle( int n )
 {
-  switch( n )
-  {
-    case 0 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_3  ); break;
-    case 1 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_6  ); break;
-    case 2 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_9  ); break;
-    case 3 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_7  ); break;
-    case 4 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_8  ); break;
-    case 5 : HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12 ); break;
-    case 6 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_10 ); break;
-    case 7 : HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_0  ); break;
-    default: TxRx_ErrorHandler();
-  }
+  const GPIO_TypeDef* Bus = TxBus[n];
+  const uint16_t      Pin = TxPin[n];
+  HAL_GPIO_TogglePin( Bus, Pin );
 }
 
 //-----------------------------------------------------------------------------
@@ -31,18 +90,9 @@ void Tx_Toggle( int n )
 //-----------------------------------------------------------------------------
 void Tx_SetLow( int n )
 {
-  switch( n )
-  {
-    case 0 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_3 , GPIO_PIN_RESET ); break;
-    case 1 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6 , GPIO_PIN_RESET ); break;
-    case 2 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9 , GPIO_PIN_RESET ); break;
-    case 3 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_7 , GPIO_PIN_RESET ); break;
-    case 4 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8 , GPIO_PIN_RESET ); break;
-    case 5 : HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET ); break;
-    case 6 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET ); break;
-    case 7 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0 , GPIO_PIN_RESET ); break;
-    default: TxRx_ErrorHandler();
-  }
+  const GPIO_TypeDef* Bus = TxBus[n];
+  const uint16_t      Pin = TxPin[n];
+  HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_RESET );
 }
 
 //-----------------------------------------------------------------------------
@@ -50,18 +100,25 @@ void Tx_SetLow( int n )
 //-----------------------------------------------------------------------------
 void Tx_SetHigh( int n )
 {
-  switch( n )
-  {
-    case 0 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_3 , GPIO_PIN_SET ); break;
-    case 1 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6 , GPIO_PIN_SET ); break;
-    case 2 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9 , GPIO_PIN_SET ); break;
-    case 3 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_7 , GPIO_PIN_SET ); break;
-    case 4 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8 , GPIO_PIN_SET ); break;
-    case 5 : HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET ); break;
-    case 6 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET ); break;
-    case 7 : HAL_GPIO_WritePin(GPIOF, GPIO_PIN_0 , GPIO_PIN_SET ); break;
-    default: TxRx_ErrorHandler();
-  }
+  const GPIO_TypeDef* Bus = TxBus[n];
+  const uint16_t      Pin = TxPin[n];
+  HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_SET );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set Tx<n> laser LOW
+//-----------------------------------------------------------------------------
+void Tx_SetLowAll( void )
+{
+  Tx_SetLowHigh( 0x00 );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set Tx<n> laser HIGH
+//-----------------------------------------------------------------------------
+void Tx_SetHighAll( void )
+{
+  Tx_SetLowHigh( 0xFF );
 }
 
 //-----------------------------------------------------------------------------
@@ -69,21 +126,11 @@ void Tx_SetHigh( int n )
 //-----------------------------------------------------------------------------
 int Tx_ReadState( int n )
 {
-  GPIO_PinState PinState = GPIO_PIN_SET;
-  switch( n )
-  {
-    case 0 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_3  ); break;
-    case 1 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_6  ); break;
-    case 2 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_9  ); break;
-    case 3 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_7  ); break;
-    case 4 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_8  ); break;
-    case 5 : PinState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12 ); break;
-    case 6 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_10 ); break;
-    case 7 : PinState = HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_0  ); break;
-    default: TxRx_ErrorHandler();
-  }
-  const int  RetValue = ( PinState==GPIO_PIN_RESET )? 0 : 1 ;
-  return     RetValue;
+  const GPIO_TypeDef* Bus      = TxBus[n];
+  const uint16_t      Pin      = TxPin[n];
+  const GPIO_PinState State    = HAL_GPIO_ReadPin( Bus, Pin );
+  const int           RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
+  return RetValue;
 }
 
 //-----------------------------------------------------------------------------
@@ -91,21 +138,39 @@ int Tx_ReadState( int n )
 //-----------------------------------------------------------------------------
 int Rx_ReadState( int n )
 {
-  GPIO_PinState PinState = GPIO_PIN_SET;
-  switch( n )
+  const GPIO_TypeDef* Bus      = RxBus[n];
+  const uint16_t      Pin      = RxPin[n];
+  const GPIO_PinState State    = HAL_GPIO_ReadPin( Bus, Pin );
+  const int           RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
+  return RetValue;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Read all Tx<n> laser states
+//-----------------------------------------------------------------------------
+int Tx_ReadStateAll( void )
+{
+  int State = 0;
+  for( int i=7; i>=0; i-- )
   {
-    case 0 : PinState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6  ); break;
-    case 1 : PinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9  ); break;
-    case 2 : PinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_6  ); break;
-    case 3 : PinState = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10 ); break;
-    case 4 : PinState = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11 ); break;
-    case 5 : PinState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0  ); break;
-    case 6 : PinState = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12 ); break;
-    case 7 : PinState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_6  ); break;
-    default: TxRx_ErrorHandler();
+    State <<= 1;
+    State |= Tx_ReadState(i);
   }
-  const int  RetValue = ( PinState==GPIO_PIN_RESET )? 0 : 1 ;
-  return     RetValue;
+  return State;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Read all Rx<n> receiver states
+//-----------------------------------------------------------------------------
+int Rx_ReadStateAll( void )
+{
+  int State = 0;
+  for( int i=7; i>=0; i-- )
+  {
+    State <<= 1;
+    State |= Rx_ReadState(i);
+  }
+  return State;
 }
 
 //-----------------------------------------------------------------------------

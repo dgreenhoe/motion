@@ -88,6 +88,7 @@ TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim13;
 TIM_HandleTypeDef htim14;
+TIM_HandleTypeDef htim15;
 TIM_HandleTypeDef htim16;
 TIM_HandleTypeDef htim17;
 
@@ -121,6 +122,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -177,6 +179,7 @@ int main(void)
   MX_DMA_Init();
   MX_TIM6_Init();
   MX_ADC1_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
   DMA_Config( &hdac1, &hdma_dac1_ch1, DMA1_Stream0 );
   DMA_Config( &hdac1, &hdma_dac1_ch2, DMA1_Stream1 );
@@ -989,6 +992,55 @@ static void MX_TIM14_Init(void)
 }
 
 /**
+  * @brief TIM15 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM15_Init(void)
+{
+
+  /* USER CODE BEGIN TIM15_Init 0 */
+
+  /* USER CODE END TIM15_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_IC_InitTypeDef sConfigIC = {0};
+
+  /* USER CODE BEGIN TIM15_Init 1 */
+
+  /* USER CODE END TIM15_Init 1 */
+  htim15.Instance = TIM15;
+  htim15.Init.Prescaler = 0;
+  htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim15.Init.Period = 65535;
+  htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim15.Init.RepetitionCounter = 0;
+  htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_IC_Init(&htim15) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim15, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM15_Init 2 */
+
+  /* USER CODE END TIM15_Init 2 */
+
+}
+
+/**
   * @brief TIM16 Initialization Function
   * @param None
   * @retval None
@@ -1209,9 +1261,9 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, PE2_GPiO_LED0_Pin|PE3_GPiO_LED4_Pin|PE4_GPiO_LED1_Pin|PE5_GPiO_LED2_Pin
-                          |PE6_GPiO_LED3_Pin|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10
-                          |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15
-                          |GPIO_PIN_0|LED_YELLOW_Pin, GPIO_PIN_RESET);
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_12
+                          |GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0
+                          |LED_YELLOW_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, PF0_Out_TX7_Pin|PF1_GPiO_LED7_Pin|PF2_GPIO_RST_MM_Pin|PF3_Out_TX0_Pin
@@ -1242,13 +1294,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8|PA15_PROTO5_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PE2_GPiO_LED0_Pin PE3_GPiO_LED4_Pin PE4_GPiO_LED1_Pin PE5_GPiO_LED2_Pin
-                           PE6_GPiO_LED3_Pin PE7 PE8 PE10
-                           PE12 PE13 PE14 PE15
-                           PE0 LED_YELLOW_Pin */
+                           PE7 PE8 PE10 PE12
+                           PE13 PE14 PE15 PE0
+                           LED_YELLOW_Pin */
   GPIO_InitStruct.Pin = PE2_GPiO_LED0_Pin|PE3_GPiO_LED4_Pin|PE4_GPiO_LED1_Pin|PE5_GPiO_LED2_Pin
-                          |PE6_GPiO_LED3_Pin|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10
-                          |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15
-                          |GPIO_PIN_0|LED_YELLOW_Pin;
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_12
+                          |GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0
+                          |LED_YELLOW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

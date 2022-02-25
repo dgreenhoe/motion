@@ -1,14 +1,10 @@
-void Tx_0_Toggle(void);
-void Tx_1_Toggle(void);
-void Tx_2_Toggle(void);
-void Tx_3_Toggle(void);
-void Tx_4_Toggle(void);
-void Tx_5_Toggle(void);
-void Tx_6_Toggle(void);
-void Tx_7_Toggle(void);
 void Tx_SetLow( int n );
 void Tx_SetHigh( int n );
 void Tx_Toggle( int n );
+void Tx_SetLowAll( void );
+void Tx_SetHighAll( void );
 int Tx_ReadState( int n );
 int Rx_ReadState( int n );
+int Tx_ReadStateAll( void );
+int Rx_ReadStateAll( void );
 
