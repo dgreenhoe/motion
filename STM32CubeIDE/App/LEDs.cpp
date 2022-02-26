@@ -9,18 +9,17 @@ extern "C" void LED_test(void); // mixing C/C++: https://isocpp.org/wiki/faq/mix
 extern "C" void LED_Ylw_Toggle(void);
 extern "C" void LED_Red_Toggle(void);
 extern "C" void LED_Grn_Toggle(void);
-extern "C" void LED_0_Toggle(void);
-extern "C" void LED_1_Toggle(void);
-extern "C" void LED_2_Toggle(void);
-extern "C" void LED_3_Toggle(void);
-extern "C" void LED_4_Toggle(void);
-extern "C" void LED_5_Toggle(void);
-extern "C" void LED_6_Toggle(void);
-extern "C" void LED_7_Toggle(void);
+extern "C" HAL_StatusTypeDef LED_Toggle( int n );
+extern "C" HAL_StatusTypeDef LED_SetHigh( int n );
+extern "C" HAL_StatusTypeDef LED_SetLow( int n );
+extern "C" void LED_Sequence(uint32_t delay);
+                               //   0           1           2           3           4           5           6           7           Y           R            G
+GPIO_TypeDef* const LED_Bus[] = { GPIOE,      GPIOE,      GPIOE,      GPIOG,      GPIOE,      GPIOD,      GPIOD,      GPIOF,      GPIOE,      GPIOB,       GPIOB      };
+const uint16_t      LED_Pin[] = { GPIO_PIN_2, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_1, GPIO_PIN_3, GPIO_PIN_1, GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_1, GPIO_PIN_14, GPIO_PIN_0 };
 
-void Tx_Toggle(uint32_t delay);
-void LED_Toggle(uint32_t delay);
-
+//-----------------------------------------------------------------------------
+//! \brief LED Test
+//-----------------------------------------------------------------------------
 void LED_test(void)
 {
   LED_Red_Toggle() ; HAL_Delay(5);
@@ -33,31 +32,56 @@ void LED_test(void)
 
 //-----------------------------------------------------------------------------
 //! \brief Toggle LED<n>
-//-----------------------------------------------------------------------------
-void LED_0_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_2 ); }
-void LED_1_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4 ); }
-void LED_2_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5 ); }
 //void LED_3_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_6 ); }  // pcb rev1
-void LED_3_Toggle(void){ HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_1 ); }
-void LED_4_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3 ); }
-void LED_5_Toggle(void){ HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_1 ); }
-void LED_6_Toggle(void){ HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_0 ); }
-void LED_7_Toggle(void){ HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_1 ); }
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef LED_Toggle( int n )
+{
+  const int NumLEDs = sizeof(LED_Pin) / sizeof(uint16_t);
+  if( n<0 || n>NumLEDs ) return HAL_ERROR;
+  GPIO_TypeDef * const Bus = LED_Bus[n];
+  uint16_t       const Pin = LED_Pin[n];
+  HAL_GPIO_TogglePin( Bus, Pin );
+  return HAL_OK;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set LED<n> High
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef LED_SetHigh( int n )
+{
+  const int NumLEDs = sizeof(LED_Pin) / sizeof(uint16_t);
+  if( n<0 || n>NumLEDs ) return HAL_ERROR;
+  GPIO_TypeDef * const Bus = LED_Bus[n];
+  uint16_t       const Pin = LED_Pin[n];
+  HAL_GPIO_WritePin( Bus, Pin, GPIO_PIN_SET );
+  return HAL_OK;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set LED<n> High
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef LED_SetLow( int n )
+{
+  const int NumLEDs = sizeof(LED_Pin) / sizeof(uint16_t);
+  if( n<0 || n>NumLEDs ) return HAL_ERROR;
+  GPIO_TypeDef * const Bus = LED_Bus[n];
+  uint16_t       const Pin = LED_Pin[n];
+  HAL_GPIO_WritePin( Bus, Pin, GPIO_PIN_RESET );
+  return HAL_OK;
+}
 
 //-----------------------------------------------------------------------------
 // \brief Toggle Motion Board LEDs
 // \params[in] delay : Delay in milliseconds after each toggle
 //-----------------------------------------------------------------------------
-void LED_Toggle(uint32_t delay)
+void LED_Sequence(uint32_t delay)
 {
-  LED_0_Toggle(); HAL_Delay( delay );
-  LED_1_Toggle(); HAL_Delay( delay );
-  LED_2_Toggle(); HAL_Delay( delay );
-  LED_3_Toggle(); HAL_Delay( delay );
-  LED_4_Toggle(); HAL_Delay( delay );
-  LED_5_Toggle(); HAL_Delay( delay );
-  LED_6_Toggle(); HAL_Delay( delay );
-  LED_7_Toggle(); HAL_Delay( delay );
+  const int NumLEDs = sizeof(LED_Pin) / sizeof(uint16_t);
+  for( int n=0; n<NumLEDs; n++ )
+  {
+    LED_Toggle( n );
+    HAL_Delay( delay );
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -65,5 +89,5 @@ void LED_Toggle(uint32_t delay)
 //-----------------------------------------------------------------------------
 void LED_Ylw_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1 ); }
 void LED_Red_Toggle(void){ HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14); }
-void LED_Grn_Toggle(void){ HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0 ); } 
+void LED_Grn_Toggle(void){ HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0 ); }
 

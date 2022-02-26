@@ -18,15 +18,16 @@ int Menu_Options(void)
   printf("Menu Options:\r\n");
   printf("  r: Toggle Red LED     ");   printf("  g: Toggle Green LED\r\n"  );
   printf("  y: Toggle Yellow LED  ");   printf("\r\n"                       );
-  printf("  0: Toggle LED 0       ");   printf("  4: Toggle LED 4\r\n"      );
-  printf("  1: Toggle LED 1       ");   printf("  5: Toggle LED 5\r\n"      );
-  printf("  2: Toggle LED 2       ");   printf("  6: Toggle LED 6\r\n"      );
-  printf("  3: Toggle LED 3       ");   printf("  7: Toggle LED 7\r\n"      );
-  printf("  ): Toggle Tx 0        ");   printf("  $: Toggle Tx 4\r\n"       );
-  printf("  !: Toggle Tx 1        ");   printf("  %%: Toggle Tx 5\r\n"      );
-  printf("  @: Toggle Tx 2        ");   printf("  ^: Toggle Tx 6\r\n"       );
-  printf("  #: Toggle Tx 3        ");   printf("  &: Toggle Tx 7\r\n"       );
-  printf("  N: All Tx ON          ");   printf("  F: All Tx OFF\r\n"        );
+  printf("  ): Toggle LED 0       ");   printf("  0: Toggle Tx 0\r\n"       );
+  printf("  !: Toggle LED 1       ");   printf("  1: Toggle Tx 1\r\n"       );
+  printf("  @: Toggle LED 2       ");   printf("  2: Toggle Tx 2\r\n"       );
+  printf("  #: Toggle LED 3       ");   printf("  3: Toggle Tx 3\r\n"       );
+  printf("  $: Toggle LED 4       ");   printf("  4: Toggle Tx 4\r\n"       );
+  printf("  %%: Toggle LED 5      ");   printf("  5: Toggle Tx 5\r\n"       );
+  printf("  ^: Toggle LED 6       ");   printf("  6: Toggle Tx 6\r\n"       );
+  printf("  &: Toggle LED 7       ");   printf("  7: Toggle Tx 7\r\n"       );
+  printf("  N: All    LED ON      ");   printf("  n: All    Tx ON\r\n"      );
+  printf("  F: All    LED OFF     ");   printf("  f: All    Tx OFF\r\n"     );
   printf("  R: Read Rx & Tx Values");   printf("\r\n"                       );
   return 0;
 }
@@ -44,28 +45,29 @@ int Menu_Processing( const uint8_t oneChar )
     case 'r':  printf("Toggle Red LED\r\n"    ); LED_Red_Toggle();  break;
     case 'g':  printf("Toggle Green LED\r\n"  ); LED_Grn_Toggle();  break;
     case 'y':  printf("Toggle Yellow LED\r\n" ); LED_Ylw_Toggle();  break;
-    case '`':
-    case '0':  printf("Toggle LED 0\r\n"      ); LED_0_Toggle()  ;  break;
-    case '1':  printf("Toggle LED 1\r\n"      ); LED_1_Toggle()  ;  break;
-    case '2':  printf("Toggle LED 2\r\n"      ); LED_2_Toggle()  ;  break;
-    case '3':  printf("Toggle LED 3\r\n"      ); LED_3_Toggle()  ;  break;
-    case '4':  printf("Toggle LED 4\r\n"      ); LED_4_Toggle()  ;  break;
-    case '5':  printf("Toggle LED 5\r\n"      ); LED_5_Toggle()  ;  break;
-    case '6':  printf("Toggle LED 6\r\n"      ); LED_6_Toggle()  ;  break;
-    case '7':  printf("Toggle LED 7\r\n"      ); LED_7_Toggle()  ;  break;
     case '~':
-    case ')':  printf("Toggle Tx 0\r\n"       ); Tx_Toggle( 0 )  ;  break;
-    case '!':  printf("Toggle Tx 1\r\n"       ); Tx_Toggle( 1 )  ;  break;
-    case '@':  printf("Toggle Tx 2\r\n"       ); Tx_Toggle( 2 )  ;  break;
-    case '#':  printf("Toggle Tx 3\r\n"       ); Tx_Toggle( 3 )  ;  break;
-    case '$':  printf("Toggle Tx 4\r\n"       ); Tx_Toggle( 4 )  ;  break;
-    case '%':  printf("Toggle Tx 5\r\n"       ); Tx_Toggle( 5 )  ;  break;
-    case '^':  printf("Toggle Tx 6\r\n"       ); Tx_Toggle( 6 )  ;  break;
-    case '&':  printf("Toggle Tx 7\r\n"       ); Tx_Toggle( 7 )  ;  break;
+    case ')':  printf("Toggle LED 0\r\n"      ); LED_Toggle( 0 ) ;  break;
+    case '!':  printf("Toggle LED 1\r\n"      ); LED_Toggle( 1 ) ;  break;
+    case '@':  printf("Toggle LED 2\r\n"      ); LED_Toggle( 2 ) ;  break;
+    case '#':  printf("Toggle LED 3\r\n"      ); LED_Toggle( 3 ) ;  break;
+    case '$':  printf("Toggle LED 4\r\n"      ); LED_Toggle( 4 ) ;  break;
+    case '%':  printf("Toggle LED 5\r\n"      ); LED_Toggle( 5 ) ;  break;
+    case '^':  printf("Toggle LED 6\r\n"      ); LED_Toggle( 6 ) ;  break;
+    case '&':  printf("Toggle LED 7\r\n"      ); LED_Toggle( 7 ) ;  break;
+    case '`':
+    case '0':  printf("Toggle Tx 0\r\n"       ); Tx_Toggle( 0 )  ;  break;
+    case '1':  printf("Toggle Tx 1\r\n"       ); Tx_Toggle( 1 )  ;  break;
+    case '2':  printf("Toggle Tx 2\r\n"       ); Tx_Toggle( 2 )  ;  break;
+    case '3':  printf("Toggle Tx 3\r\n"       ); Tx_Toggle( 3 )  ;  break;
+    case '4':  printf("Toggle Tx 4\r\n"       ); Tx_Toggle( 4 )  ;  break;
+    case '5':  printf("Toggle Tx 5\r\n"       ); Tx_Toggle( 5 )  ;  break;
+    case '6':  printf("Toggle Tx 6\r\n"       ); Tx_Toggle( 6 )  ;  break;
+    case '7':  printf("Toggle Tx 7\r\n"       ); Tx_Toggle( 7 )  ;  break;
     case 'n':  printf("All Tx ON\r\n"         ); Tx_SetHighAll() ;  break;
     case 'N':  printf("All Tx ON\r\n"         ); Tx_SetHighAll() ;  break;
     case 'f':  printf("All Tx OFF\r\n"        ); Tx_SetLowAll()  ;  break;
     case 'F':  printf("All Tx OFF\r\n"        ); Tx_SetLowAll()  ;  break;
+    case 's':  printf("Sequence through 8 LEDs\r\n"); LED_Sequence(250); break;
     case 'R':
     case ' ':
       RxValue = Rx_ReadStateAll();
