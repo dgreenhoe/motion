@@ -44,7 +44,7 @@ GPIO_TypeDef* RxBus[] =
   GPIOA
 };
 
-GPIO_TypeDef* RxPin[] =
+uint16_t RxPin[] =
 {
   GPIO_PIN_6 ,
   GPIO_PIN_9 ,
@@ -80,8 +80,10 @@ void Tx_SetLowHigh( uint8_t ControlByte )
 //-----------------------------------------------------------------------------
 void Tx_Toggle( int n )
 {
-  const GPIO_TypeDef* Bus = TxBus[n];
-  const uint16_t      Pin = TxPin[n];
+  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
+  GPIO_TypeDef* const Bus   = TxBus[n];
+  uint16_t      const Pin   = TxPin[n];
   HAL_GPIO_TogglePin( Bus, Pin );
 }
 
@@ -90,8 +92,10 @@ void Tx_Toggle( int n )
 //-----------------------------------------------------------------------------
 void Tx_SetLow( int n )
 {
-  const GPIO_TypeDef* Bus = TxBus[n];
-  const uint16_t      Pin = TxPin[n];
+  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
+  GPIO_TypeDef* const Bus   = TxBus[n];
+  uint16_t      const Pin   = TxPin[n];
   HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_RESET );
 }
 
@@ -100,8 +104,10 @@ void Tx_SetLow( int n )
 //-----------------------------------------------------------------------------
 void Tx_SetHigh( int n )
 {
-  const GPIO_TypeDef* Bus = TxBus[n];
-  const uint16_t      Pin = TxPin[n];
+  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
+  GPIO_TypeDef* const Bus   = TxBus[n];
+  uint16_t      const Pin   = TxPin[n];
   HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_SET );
 }
 
@@ -126,22 +132,24 @@ void Tx_SetHighAll( void )
 //-----------------------------------------------------------------------------
 int Tx_ReadState( int n )
 {
-  const GPIO_TypeDef* Bus      = TxBus[n];
-  const uint16_t      Pin      = TxPin[n];
-  const GPIO_PinState State    = HAL_GPIO_ReadPin( Bus, Pin );
-  const int           RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
+  GPIO_TypeDef* const Bus      = TxBus[n];
+  uint16_t      const Pin      = TxPin[n];
+  GPIO_PinState const State    = HAL_GPIO_ReadPin( Bus, Pin );
+  int           const RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
   return RetValue;
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Read Tx<n> laser state
+////! \brief Read Tx<n> laser state
 //-----------------------------------------------------------------------------
 int Rx_ReadState( int n )
 {
-  const GPIO_TypeDef* Bus      = RxBus[n];
-  const uint16_t      Pin      = RxPin[n];
-  const GPIO_PinState State    = HAL_GPIO_ReadPin( Bus, Pin );
-  const int           RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
+  int           const NumTx    = sizeof(TxPin) / sizeof(uint16_t);
+  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return -1; }
+  GPIO_TypeDef* const Bus      = RxBus[n];
+  uint16_t      const Pin      = RxPin[n];
+  GPIO_PinState const State    = HAL_GPIO_ReadPin( Bus, Pin );
+  int           const RetValue = ( State==GPIO_PIN_RESET )? 0 : 1 ;
   return RetValue;
 }
 
@@ -150,8 +158,9 @@ int Rx_ReadState( int n )
 //-----------------------------------------------------------------------------
 int Tx_ReadStateAll( void )
 {
+  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
   int State = 0;
-  for( int i=7; i>=0; i-- )
+  for( int i=NumTx-1; i>=0; i-- )
   {
     State <<= 1;
     State |= Tx_ReadState(i);
@@ -165,7 +174,8 @@ int Tx_ReadStateAll( void )
 int Rx_ReadStateAll( void )
 {
   int State = 0;
-  for( int i=7; i>=0; i-- )
+  int const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  for( int i=NumTx-1; i>=0; i-- )
   {
     State <<= 1;
     State |= Rx_ReadState(i);
@@ -174,7 +184,7 @@ int Rx_ReadStateAll( void )
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Set Tx<n> laser LOW
+//! \brief TxRx Error Handler
 //-----------------------------------------------------------------------------
 static void TxRx_ErrorHandler(void)
 {
