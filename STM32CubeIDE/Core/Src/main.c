@@ -595,10 +595,6 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM1_Init 2 */
 
   /* USER CODE END TIM1_Init 2 */
@@ -773,6 +769,10 @@ static void MX_TIM4_Init(void)
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
@@ -1281,7 +1281,7 @@ static void MX_GPIO_Init(void)
                           |GPIO_PIN_7|PB8_PROTO9_Pin|PB9_PROTO10_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, PG0_BUF_OE__Pin|GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4
+  HAL_GPIO_WritePin(GPIOG, PG0_BUF_OE__Pin|PG1_Out_LED3_Pin|GPIO_PIN_3|GPIO_PIN_4
                           |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9
                           |GPIO_PIN_10|GPIO_PIN_12|GPIO_PIN_14|GPIO_PIN_15, GPIO_PIN_RESET);
 
@@ -1345,16 +1345,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PG0_BUF_OE__Pin PG1 PG3 PG4
+  /*Configure GPIO pins : PG0_BUF_OE__Pin PG1_Out_LED3_Pin PG3 PG4
                            PG5 PG6 PG8 PG9
                            PG10 PG12 PG14 PG15 */
-  GPIO_InitStruct.Pin = PG0_BUF_OE__Pin|GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4
+  GPIO_InitStruct.Pin = PG0_BUF_OE__Pin|PG1_Out_LED3_Pin|GPIO_PIN_3|GPIO_PIN_4
                           |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9
                           |GPIO_PIN_10|GPIO_PIN_12|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PE11 */
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD10 PD11_GPIO_MP3CSN_MM_Pin PD14 PD15
                            PD0_GPiO_LED6_Pin PD1_GPiO_LED5_Pin PD2 PD4

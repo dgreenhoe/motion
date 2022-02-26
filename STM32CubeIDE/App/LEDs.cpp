@@ -37,7 +37,8 @@ void LED_test(void)
 void LED_0_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_2 ); }
 void LED_1_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4 ); }
 void LED_2_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5 ); }
-void LED_3_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_6 ); }
+//void LED_3_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_6 ); }  // pcb rev1
+void LED_3_Toggle(void){ HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_1 ); }
 void LED_4_Toggle(void){ HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3 ); }
 void LED_5_Toggle(void){ HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_1 ); }
 void LED_6_Toggle(void){ HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_0 ); }

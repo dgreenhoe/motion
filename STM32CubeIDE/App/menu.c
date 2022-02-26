@@ -62,7 +62,9 @@ int Menu_Processing( const uint8_t oneChar )
     case '%':  printf("Toggle Tx 5\r\n"       ); Tx_Toggle( 5 )  ;  break;
     case '^':  printf("Toggle Tx 6\r\n"       ); Tx_Toggle( 6 )  ;  break;
     case '&':  printf("Toggle Tx 7\r\n"       ); Tx_Toggle( 7 )  ;  break;
+    case 'n':  printf("All Tx ON\r\n"         ); Tx_SetHighAll() ;  break;
     case 'N':  printf("All Tx ON\r\n"         ); Tx_SetHighAll() ;  break;
+    case 'f':  printf("All Tx OFF\r\n"        ); Tx_SetLowAll()  ;  break;
     case 'F':  printf("All Tx OFF\r\n"        ); Tx_SetLowAll()  ;  break;
     case 'R':
     case ' ':
