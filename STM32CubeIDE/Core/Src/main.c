@@ -15,8 +15,6 @@
   *
   ******************************************************************************
   */
-#include <stdio.h>
-#include <stdbool.h>
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -24,15 +22,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "io.h"
-#include "dma.h"
-#include "menu.h"
+#include "AppMain.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-void LED_test(void);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -182,38 +177,17 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
-  DMA_Config( &hdac1, &hdma_dac1_ch1, DMA1_Stream0 );
-  DMA_Config( &hdac1, &hdma_dac1_ch2, DMA1_Stream1 );
+  return AppMain();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//  __HAL_RCC_TIM3_CLK_ENABLE();
-//  HAL_TIM_ConfigClockSource();
-//  //HAL_TIM_Base_MspInit();
-//  HAL_TIM_Base_Init();
-//  //HAL_TIM_IC_MspInit();
-//  HAL_TIM_IC_Init();
-//  HAL_TIM_IC_Start();
-  printf("=======================\r\n");
-  printf("| Laser Motion Sensor |\r\n");
-  printf("=======================\r\n");
-  Menu_Options( );
-  uint8_t oneChar;
-  uint32_t dacBuf[16] = {0x0ff, 0x1ff, 0x2ff, 0x3ff, 0x4ff, 0x5ff, 0x6ff, 0x7ff, 0x8ff, 0x9ff, 0xaff, 0xbff, 0xcff, 0xdff, 0xeff, 0xfff};
-  HAL_DAC_Start( &hdac1, DAC_CHANNEL_1 );
-  HAL_DAC_Start( &hdac1, DAC_CHANNEL_2 );
-  HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_1, dacBuf, 16, DAC_ALIGN_12B_R );
-  HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_2, dacBuf, 16, DAC_ALIGN_12B_R );
-  HAL_TIM_Base_Start( &htim6 );
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-   if( GetOneByte( &oneChar ) )
-     Menu_Processing( oneChar );
   }
   /* USER CODE END 3 */
 }

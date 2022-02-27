@@ -98,3 +98,13 @@ static char* Number_to_BinaryString( const int Number, char *buf )
   buf[9] = '\0';
   return buf;
 }
+
+//-----------------------------------------------------------------------------
+//! \brief Splash Screen
+//-----------------------------------------------------------------------------
+void Splash(void)
+{
+  printf("=======================\r\n");
+  printf("| Laser Motion Sensor |\r\n");
+  printf("=======================\r\n");
+}
