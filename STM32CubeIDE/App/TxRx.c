@@ -42,7 +42,7 @@ GPIO_TypeDef* RxBus[] =
   GPIOB,
   GPIOA,
   GPIOD,
-  GPIOA
+  GPIOC
 };
 
 uint16_t RxPin[] =
@@ -54,7 +54,7 @@ uint16_t RxPin[] =
   GPIO_PIN_11,
   GPIO_PIN_0 ,
   GPIO_PIN_12,
-  GPIO_PIN_6
+  GPIO_PIN_8
 };
 
 //-----------------------------------------------------------------------------
@@ -191,7 +191,7 @@ int TxRx_Test( int n )
 {
   int Status = 0;
   int RxState;
-  uint32_t const milliseconds = 2000;
+  uint32_t const milliseconds = 500;
   LED_Off( n );
   Tx_SetHigh( n );
   HAL_Delay( milliseconds );
