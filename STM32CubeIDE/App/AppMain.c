@@ -8,27 +8,29 @@
 #include "io.h"
 #include "dma.h"
 #include "menu.h"
+#include "LEDs.h"
+#include "TxRx.h"
 #include "AppMain.h"
 
-extern ADC_HandleTypeDef hadc1;
-extern DAC_HandleTypeDef hdac1;
-extern DMA_HandleTypeDef hdma_dac1_ch1;
-extern DMA_HandleTypeDef hdma_dac1_ch2;
-extern ETH_HandleTypeDef heth;
-extern SPI_HandleTypeDef hspi2;
-extern SPI_HandleTypeDef hspi3;
-extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim4;
-extern TIM_HandleTypeDef htim5;
-extern TIM_HandleTypeDef htim6;
-extern TIM_HandleTypeDef htim8;
-extern TIM_HandleTypeDef htim13;
-extern TIM_HandleTypeDef htim14;
-extern TIM_HandleTypeDef htim15;
-extern TIM_HandleTypeDef htim16;
-extern TIM_HandleTypeDef htim17;
+extern ADC_HandleTypeDef  hadc1;
+extern DAC_HandleTypeDef  hdac1;
+extern DMA_HandleTypeDef  hdma_dac1_ch1;
+extern DMA_HandleTypeDef  hdma_dac1_ch2;
+extern ETH_HandleTypeDef  heth;
+extern SPI_HandleTypeDef  hspi2;
+extern SPI_HandleTypeDef  hspi3;
+extern TIM_HandleTypeDef  htim1;
+extern TIM_HandleTypeDef  htim2;
+extern TIM_HandleTypeDef  htim3;
+extern TIM_HandleTypeDef  htim4;
+extern TIM_HandleTypeDef  htim5;
+extern TIM_HandleTypeDef  htim6;
+extern TIM_HandleTypeDef  htim8;
+extern TIM_HandleTypeDef  htim13;
+extern TIM_HandleTypeDef  htim14;
+extern TIM_HandleTypeDef  htim15;
+extern TIM_HandleTypeDef  htim16;
+extern TIM_HandleTypeDef  htim17;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 
@@ -48,17 +50,19 @@ int AppMain(void)
 //  HAL_TIM_IC_Start();
   Splash();
   Menu_Options( );
-  uint8_t oneChar;
+  uint8_t oneByte;
   uint32_t dacBuf[16] = {0x0ff, 0x1ff, 0x2ff, 0x3ff, 0x4ff, 0x5ff, 0x6ff, 0x7ff, 0x8ff, 0x9ff, 0xaff, 0xbff, 0xcff, 0xdff, 0xeff, 0xfff};
   HAL_DAC_Start( &hdac1, DAC_CHANNEL_1 );
   HAL_DAC_Start( &hdac1, DAC_CHANNEL_2 );
   HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_1, dacBuf, 16, DAC_ALIGN_12B_R );
   HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_2, dacBuf, 16, DAC_ALIGN_12B_R );
   HAL_TIM_Base_Start( &htim6 );
-
+  //for( int n=0; n<8; n++ ) LED_Pulsate( n );
+  for( int n=0; n<8; n++ ) TxRx_Test( n );
   while (1)
   {
-   if( GetOneByte( &oneChar ) )
-     Menu_Processing( oneChar );
+   if( GetOneByte( &oneByte ) )
+     Menu_Processing( oneByte );
   }
+  return -1;
 }

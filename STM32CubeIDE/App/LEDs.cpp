@@ -88,7 +88,7 @@ void LED_Off( int n )
 //-----------------------------------------------------------------------------
 void LED_Pulsate( int n )
 {
-  uint32_t const milliseconds = 200;
+  uint32_t const milliseconds = 100;
   int      const NumPulses    = 3;
   for( int i=0; i<NumPulses; i++ )
   {

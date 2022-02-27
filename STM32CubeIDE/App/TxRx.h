@@ -7,4 +7,5 @@ int Tx_ReadState( int n );
 int Rx_ReadState( int n );
 int Tx_ReadStateAll( void );
 int Rx_ReadStateAll( void );
+int TxRx_Test( int n );
 

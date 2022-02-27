@@ -2,6 +2,7 @@
 // Daniel J. Greenhoe
 //=============================================================================
 #include "main.h"
+#include "LEDs.h"
 #include "TxRx.h"
 #include <stdio.h>
 
@@ -184,9 +185,45 @@ int Rx_ReadStateAll( void )
 }
 
 //-----------------------------------------------------------------------------
+//! \brief Test laser transmitter-receiver channels
+//-----------------------------------------------------------------------------
+int TxRx_Test( int n )
+{
+  int Status = 0;
+  int RxState;
+  uint32_t const milliseconds = 2000;
+  LED_Off( n );
+  Tx_SetHigh( n );
+  HAL_Delay( milliseconds );
+  RxState = Rx_ReadState(n);
+  if( RxState != 1 )
+  {
+    Status = -1;
+    printf("Tx%d_SetHigh but Rx%d_State=%d\r\n", n, n, RxState);
+    TxRx_ErrorHandler();
+    LED_On( n );
+    return -1;
+  }
+  Tx_SetLow( n );
+  HAL_Delay( milliseconds );
+  RxState = Rx_ReadState(n);
+  if( RxState != 0 ) 
+  {
+    Status = -1;
+    printf("Tx%d_SetLow but Rx%d_State=%d\r\n", n, n, RxState);
+    TxRx_ErrorHandler();
+    LED_On( n );
+    return -1;
+  }
+  LED_Pulsate( n );
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
 //! \brief TxRx Error Handler
 //-----------------------------------------------------------------------------
 static void TxRx_ErrorHandler(void)
 {
   printf("TxRx Error\r\n");
 }
+
