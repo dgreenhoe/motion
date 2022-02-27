@@ -26,6 +26,7 @@ extern "C" void LED_Toggle( int n );
 extern "C" void LED_On( int n );
 extern "C" void LED_Off( int n );
 extern "C" void LED_Sequence(uint32_t delay);
+extern "C" void LED_Pulsate( int n );
 
 typedef enum { LED0, LED1, LED2, LED3, LED4, LED5, LED6, LED7, LEDY, LEDR, LEDG } LED_t;
                                //   0           1           2           3           4           5           6           7           Y           R            G
@@ -80,6 +81,22 @@ void LED_Off( int n )
   GPIO_TypeDef * const Bus = LED_Bus[n];
   uint16_t       const Pin = LED_Pin[n];
   HAL_GPIO_WritePin( Bus, Pin, GPIO_PIN_RESET );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set LED<n> High
+//-----------------------------------------------------------------------------
+void LED_Pulsate( int n )
+{
+  uint32_t const milliseconds = 200;
+  int      const NumPulses    = 3;
+  for( int i=0; i<NumPulses; i++ )
+  {
+    LED_On( n );
+    HAL_Delay( milliseconds );
+    LED_Off( n );
+    HAL_Delay( milliseconds );
+  }
 }
 
 //-----------------------------------------------------------------------------

@@ -16,6 +16,7 @@
   ******************************************************************************
   */
 #include <stdio.h>
+#include <stdbool.h>
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -208,19 +209,11 @@ int main(void)
 
   while (1)
   {
-    //LED_test();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-   if( getcharnb( &oneChar ) == 1 )
-   {
-     //printf("Laser Motion Sensor cntr = %d  oneChar = %d = %02x ('%c')\r\n", cntr++, oneChar, oneChar, (char)oneChar);
+   if( GetOneByte( &oneChar ) )
      Menu_Processing( oneChar );
-   }
-   else
-   {
-     //printf(".\r");
-   }
   }
   /* USER CODE END 3 */
 }

@@ -1,2 +1,3 @@
 int _write(int file, char *ptr, int len);
-int getcharnb(uint8_t * oneChar);
+bool getcharnb(uint8_t * oneChar);
+bool GetOneByte(uint8_t * OneByte);

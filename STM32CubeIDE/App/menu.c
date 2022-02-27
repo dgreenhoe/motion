@@ -2,7 +2,6 @@
 // Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
-#include "io.h"
 #include "main.h"
 #include "LEDs.h"
 #include "TxRx.h"
