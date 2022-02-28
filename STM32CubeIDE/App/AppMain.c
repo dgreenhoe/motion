@@ -10,6 +10,7 @@
 #include "menu.h"
 #include "LEDs.h"
 #include "TxRx.h"
+#include "UserButton.h"
 #include "AppMain.h"
 
 extern ADC_HandleTypeDef  hadc1;
@@ -39,6 +40,7 @@ extern UART_HandleTypeDef huart3;
 //-----------------------------------------------------------------------------
 int AppMain(void)
 {
+  int DetectOn=0, RxState=0;
   DMA_Config( &hdac1, &hdma_dac1_ch1, DMA1_Stream0 );
   DMA_Config( &hdac1, &hdma_dac1_ch2, DMA1_Stream1 );
 //  __HAL_RCC_TIM3_CLK_ENABLE();
@@ -57,12 +59,36 @@ int AppMain(void)
   HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_1, dacBuf, 16, DAC_ALIGN_12B_R );
   HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_2, dacBuf, 16, DAC_ALIGN_12B_R );
   HAL_TIM_Base_Start( &htim6 );
-  //for( int n=0; n<8; n++ ) LED_Pulsate( n );
-  TxRx_TestAll( );
+  //TxRx_TestAll( );
   while (1)
   {
-   if( GetOneByte( &oneByte ) )
-     Menu_Processing( oneByte );
+    if( GetOneByte( &oneByte ) )
+      Menu_Processing( oneByte );
+    if( Button_Pressed()==1 )
+    {
+      if( DetectOn==0 )
+      {
+        DetectOn = 1;
+        Tx_SetHighAll();
+        LED_Grn_On();
+      }
+      else
+      {
+        DetectOn = 0;
+        Tx_SetLowAll();
+        LED_Grn_Off();
+      }
+    }
+    if( DetectOn==1 )
+    {
+      RxState = Rx_ReadStateAll();
+      if( RxState != 0xFF )
+      {
+        LED_Red_On();
+        HAL_Delay(1000);
+        LED_Red_Off();
+      }
+    }
   }
   return -1;
 }

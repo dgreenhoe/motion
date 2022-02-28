@@ -9,7 +9,7 @@
 
 static void TxRx_ErrorHandler(void);
 static void Tx_SetLowHigh( uint8_t ControlByte );
-
+uint8_t TxRxError = 0x00;
                              //   0           1           2           3            4            5            6            7
 GPIO_TypeDef* const TxBus[] = { GPIOF,      GPIOF,      GPIOF,      GPIOF,       GPIOF,       GPIOC,       GPIOF,       GPIOF      };
 uint16_t      const TxPin[] = { GPIO_PIN_3, GPIO_PIN_6, GPIO_PIN_9, GPIO_PIN_7,  GPIO_PIN_8,  GPIO_PIN_12, GPIO_PIN_10, GPIO_PIN_0 };
@@ -185,7 +185,8 @@ int Rx_ReadStateAll( void )
 int TxRx_TestAll( void )
 {
   int const NumTx = TxRx_GetNumChannels();
-  uint32_t const Duration = 250;
+  uint32_t const Duration = 100;
+  TxRxError = 0x00; // clear error flags
   for( int n=0; n<NumTx; n++ ) TxRx_Test( n, Duration );
   Tx_ToggleAll();
   for( int n=0; n<NumTx; n++ ) TxRx_Test( n, Duration );
@@ -200,39 +201,43 @@ int TxRx_TestAll( void )
 //-----------------------------------------------------------------------------
 int TxRx_Test( int const n, uint32_t const Duration )
 {
-  int const TxState = Tx_ReadState( n ); // Read initial Tx<n> state
-  int Status = 0;
+  int     const TxState   = Tx_ReadState( n ); // Read initial Tx<n> state
+  uint8_t const BitMarker = 0x01<<n;
+  int Status;
   int RxState;
   LED_Off( n );
   Tx_SetHigh( n );
   HAL_Delay( Duration );
   RxState = Rx_ReadState(n);
   printf("TxRx %d Test: Tx=1 Rx=%d ", n, RxState );
-  if( RxState == 1 ) printf("OK! ");
+  if( RxState == 1 ) printf("OK!  ");
   else
   {
-    printf("FAIL\r\n");
-    Status = -1;
-  //TxRx_ErrorHandler();
-    LED_On( n );
-    return -1;
+    printf("FAIL ");
+    TxRxError |= BitMarker; // set error flag
   }
   Tx_SetLow( n );
   HAL_Delay( Duration );
   RxState = Rx_ReadState(n);
   printf("Tx=0 Rx=%d ", RxState );
-  if( RxState == 0 ) printf("OK! ");
+  if( RxState == 0 ) printf("OK!  ");
   else
   {
-    printf("FAIL\r\n");
-    Status = -1;
-  //TxRx_ErrorHandler();
-    LED_On( n );
-    return -1;
+    printf("FAIL ");
+    TxRxError |= BitMarker; // set error flag
   }
   printf("\r\n");
+  if( TxRxError & BitMarker )
+  {
+    LED_On( n );
+    Status = -1;
+  }
+  else
+  {
   LED_Pulsate( n );
-  Tx_SetLevel( n, TxState ); // Read initial Tx<n> state
+  Status = 0;
+  }
+  Tx_SetLevel( n, TxState ); // Restore initial Tx<n> state
   return Status;
 }
 
