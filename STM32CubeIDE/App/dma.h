@@ -1,1 +1,2 @@
-void DMA_Config(const DAC_HandleTypeDef *hdac, DMA_HandleTypeDef *hdma, void * Stream);
+void DMA_Init( void );
+void DMA_Config( DMA_HandleTypeDef *hdma, void * Stream );

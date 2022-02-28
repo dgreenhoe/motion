@@ -185,7 +185,7 @@ int Rx_ReadStateAll( void )
 int TxRx_TestAll( void )
 {
   int const NumTx = TxRx_GetNumChannels();
-  uint32_t const Duration = 100;
+  uint32_t const Duration = 10;
   TxRxError = 0x00; // clear error flags
   for( int n=0; n<NumTx; n++ ) TxRx_Test( n, Duration );
   Tx_ToggleAll();
