@@ -58,7 +58,7 @@ int AppMain(void)
   HAL_DAC_Start_DMA( &hdac1, DAC_CHANNEL_2, dacBuf, 16, DAC_ALIGN_12B_R );
   HAL_TIM_Base_Start( &htim6 );
   //for( int n=0; n<8; n++ ) LED_Pulsate( n );
-  for( int n=0; n<8; n++ ) TxRx_Test( n );
+  TxRx_TestAll( );
   while (1)
   {
    if( GetOneByte( &oneByte ) )

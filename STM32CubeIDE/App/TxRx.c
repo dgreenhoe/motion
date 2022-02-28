@@ -1,119 +1,87 @@
 //=============================================================================
 // Daniel J. Greenhoe
 //=============================================================================
+#include <stdio.h>
+#include <stdbool.h>
 #include "main.h"
 #include "LEDs.h"
 #include "TxRx.h"
-#include <stdio.h>
 
 static void TxRx_ErrorHandler(void);
 static void Tx_SetLowHigh( uint8_t ControlByte );
 
-GPIO_TypeDef* TxBus[] =
-{
-  GPIOF,
-  GPIOF,
-  GPIOF,
-  GPIOF,
-  GPIOF,
-  GPIOC,
-  GPIOF,
-  GPIOF
-};
-
-uint16_t TxPin[] =
-{
-  GPIO_PIN_3 ,
-  GPIO_PIN_6 ,
-  GPIO_PIN_9 ,
-  GPIO_PIN_7 ,
-  GPIO_PIN_8 ,
-  GPIO_PIN_12,
-  GPIO_PIN_10,
-  GPIO_PIN_0
-};
-
-GPIO_TypeDef* RxBus[] =
-{
-  GPIOA,
-  GPIOE,
-  GPIOE,
-  GPIOB,
-  GPIOB,
-  GPIOA,
-  GPIOD,
-  GPIOC
-};
-
-uint16_t RxPin[] =
-{
-  GPIO_PIN_6 ,
-  GPIO_PIN_9 ,
-  GPIO_PIN_6 ,
-  GPIO_PIN_10,
-  GPIO_PIN_11,
-  GPIO_PIN_0 ,
-  GPIO_PIN_12,
-  GPIO_PIN_8
-};
+                             //   0           1           2           3            4            5            6            7
+GPIO_TypeDef* const TxBus[] = { GPIOF,      GPIOF,      GPIOF,      GPIOF,       GPIOF,       GPIOC,       GPIOF,       GPIOF      };
+uint16_t      const TxPin[] = { GPIO_PIN_3, GPIO_PIN_6, GPIO_PIN_9, GPIO_PIN_7,  GPIO_PIN_8,  GPIO_PIN_12, GPIO_PIN_10, GPIO_PIN_0 };
+GPIO_TypeDef* const RxBus[] = { GPIOA,      GPIOE,      GPIOE,      GPIOB,       GPIOB,       GPIOA,       GPIOD,       GPIOC      };
+uint16_t      const RxPin[] = { GPIO_PIN_6, GPIO_PIN_9, GPIO_PIN_6, GPIO_PIN_10, GPIO_PIN_11, GPIO_PIN_0,  GPIO_PIN_12, GPIO_PIN_8 };
 
 //-----------------------------------------------------------------------------
 //! \brief Set TX_n in accordance with bit_n of <ControlByte>
+//! \param[in] ControlByte : Bit<n>=0 sets Tx<n> to Low, and 1 to High
 //-----------------------------------------------------------------------------
 void Tx_SetLowHigh( uint8_t ControlByte )
 {
+  int const NumTx = TxRx_GetNumChannels();
   uint8_t Mask = 0x01;
-  GPIO_TypeDef* Bus;
-  uint16_t      Pin;
-  GPIO_PinState State;
-  for( int i=0; i<8; i++ )
+  bool Level;
+  for( int n=0; n<NumTx; n++ )
   {
-    Bus   = TxBus[i];
-    Pin   = TxPin[i];
-    State = ( ControlByte & Mask )? GPIO_PIN_SET : GPIO_PIN_RESET;
-    HAL_GPIO_WritePin(  Bus, Pin, State );
+    Level = (bool)( ControlByte & Mask );
+    Tx_SetLevel( n, Level );
     Mask <<= 1;
   }
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Toggle Tx<n> laser state
+//! \brief Toggle Tx<n> state
+//! \param[in] n : Tx state index
 //-----------------------------------------------------------------------------
-void Tx_Toggle( int n )
+void Tx_Toggle( int const n )
 {
-  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
-  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
-  GPIO_TypeDef* const Bus   = TxBus[n];
-  uint16_t      const Pin   = TxPin[n];
-  HAL_GPIO_TogglePin( Bus, Pin );
-}
-
-//-----------------------------------------------------------------------------
-//! \brief Set Tx<n> laser LOW
-//-----------------------------------------------------------------------------
-void Tx_SetLow( int n )
-{
-  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
-  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
-  GPIO_TypeDef* const Bus   = TxBus[n];
-  uint16_t      const Pin   = TxPin[n];
-  HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_RESET );
+  int const CurrentPinState = Rx_ReadState( n );
+  switch( CurrentPinState )
+  {
+    case 0  : Tx_SetLevel( n, true  ); break;
+    case 1  : Tx_SetLevel( n, false ); break;
+    default :                          break;
+  }
 }
 
 //-----------------------------------------------------------------------------
 //! \brief Set Tx<n> laser HIGH
+//! \param[in] n : Tx state index
 //-----------------------------------------------------------------------------
-void Tx_SetHigh( int n )
+void Tx_SetLevel( int const n, bool const Level )
 {
-  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  GPIO_PinState const PinState = Level ? GPIO_PIN_SET : GPIO_PIN_RESET;
+  int           const NumTx    = TxRx_GetNumChannels();
   if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return; }
   GPIO_TypeDef* const Bus   = TxBus[n];
   uint16_t      const Pin   = TxPin[n];
-  HAL_GPIO_WritePin(  Bus, Pin, GPIO_PIN_SET );
+  HAL_GPIO_WritePin(  Bus, Pin, PinState );
 }
 
 //-----------------------------------------------------------------------------
 //! \brief Set Tx<n> laser LOW
+//! \param[in] n : Tx state index
+//-----------------------------------------------------------------------------
+void Tx_SetLow( int const n )
+{
+  Tx_SetLevel( n, false );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set Tx<n> laser to <Level>
+//! \param[in] n : Tx state index
+//-----------------------------------------------------------------------------
+void Tx_SetHigh( int const n )
+{
+  Tx_SetLevel( n, true );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Set all Tx<n> to LOW
 //-----------------------------------------------------------------------------
 void Tx_SetLowAll( void )
 {
@@ -121,7 +89,7 @@ void Tx_SetLowAll( void )
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Set Tx<n> laser HIGH
+//! \brief Set all Tx<n> to HIGH
 //-----------------------------------------------------------------------------
 void Tx_SetHighAll( void )
 {
@@ -129,10 +97,34 @@ void Tx_SetHighAll( void )
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Read Tx<n> laser state
+//! \brief Set all Tx<n> to HIGH
 //-----------------------------------------------------------------------------
-int Tx_ReadState( int n )
+void Tx_ToggleAll( void )
 {
+  const int CurrentState = Tx_ReadStateAll();
+  const int NewState     = (~CurrentState) & (int)0x00ff;
+  Tx_SetLowHigh( NewState );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Get number of TxRx channels
+//! \return -1=Error, otherwise number of channels
+//-----------------------------------------------------------------------------
+int TxRx_GetNumChannels( void )
+{
+  int const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  return NumTx;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Read Tx<n> state
+//! \param[in] n : Tx state index
+//! \return 0=Low-state  1=High-state  -1=Error
+//-----------------------------------------------------------------------------
+int Tx_ReadState( int const n )
+{
+  int           const NumTx    = sizeof(TxPin) / sizeof(uint16_t);
+  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return -1; }
   GPIO_TypeDef* const Bus      = TxBus[n];
   uint16_t      const Pin      = TxPin[n];
   GPIO_PinState const State    = HAL_GPIO_ReadPin( Bus, Pin );
@@ -141,12 +133,14 @@ int Tx_ReadState( int n )
 }
 
 //-----------------------------------------------------------------------------
-////! \brief Read Tx<n> laser state
+//! \brief Read Rx<n> state
+//! \param[in] n : Tx state index
+//! \return 0=Low-state  1=High-state  -1=Error
 //-----------------------------------------------------------------------------
-int Rx_ReadState( int n )
+int Rx_ReadState( int const n )
 {
-  int           const NumTx    = sizeof(TxPin) / sizeof(uint16_t);
-  if( n<0 || n>=NumTx ) {TxRx_ErrorHandler(); return -1; }
+  int           const NumRx    = TxRx_GetNumChannels();
+  if( n<0 || n>=NumRx ) {TxRx_ErrorHandler(); return -1; }
   GPIO_TypeDef* const Bus      = RxBus[n];
   uint16_t      const Pin      = RxPin[n];
   GPIO_PinState const State    = HAL_GPIO_ReadPin( Bus, Pin );
@@ -155,16 +149,17 @@ int Rx_ReadState( int n )
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Read all Tx<n> laser states
+//! \brief Read all Tx<n> states
+//! \return Bit<n>=0 indicates Tx<n>=Low, 1 indicates High
 //-----------------------------------------------------------------------------
 int Tx_ReadStateAll( void )
 {
-  int           const NumTx = sizeof(TxPin) / sizeof(uint16_t);
+  int           const NumRx = TxRx_GetNumChannels();
   int State = 0;
-  for( int i=NumTx-1; i>=0; i-- )
+  for( int n=NumRx-1; n>=0; n-- )
   {
     State <<= 1;
-    State |= Tx_ReadState(i);
+    State |= Tx_ReadState(n);
   }
   return State;
 }
@@ -175,47 +170,69 @@ int Tx_ReadStateAll( void )
 int Rx_ReadStateAll( void )
 {
   int State = 0;
-  int const NumTx = sizeof(TxPin) / sizeof(uint16_t);
-  for( int i=NumTx-1; i>=0; i-- )
+  int const NumRx = TxRx_GetNumChannels();
+  for( int n=NumRx-1; n>=0; n-- )
   {
     State <<= 1;
-    State |= Rx_ReadState(i);
+    State |= Rx_ReadState(n);
   }
   return State;
 }
 
 //-----------------------------------------------------------------------------
-//! \brief Test laser transmitter-receiver channels
+//! \brief Test all transmitter-receiver channels
 //-----------------------------------------------------------------------------
-int TxRx_Test( int n )
+int TxRx_TestAll( void )
 {
+  int const NumTx = TxRx_GetNumChannels();
+  uint32_t const Duration = 250;
+  for( int n=0; n<NumTx; n++ ) TxRx_Test( n, Duration );
+  Tx_ToggleAll();
+  for( int n=0; n<NumTx; n++ ) TxRx_Test( n, Duration );
+  Tx_ToggleAll();
+  return 0;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Test transmitter-receiver channel <n>
+//! \param[in] n : Channel index
+//! \param[in] Duration: Duration in milliseconds between test segments
+//-----------------------------------------------------------------------------
+int TxRx_Test( int const n, uint32_t const Duration )
+{
+  int const TxState = Tx_ReadState( n ); // Read initial Tx<n> state
   int Status = 0;
   int RxState;
-  uint32_t const milliseconds = 500;
   LED_Off( n );
   Tx_SetHigh( n );
-  HAL_Delay( milliseconds );
+  HAL_Delay( Duration );
   RxState = Rx_ReadState(n);
-  if( RxState != 1 )
+  printf("TxRx %d Test: Tx=1 Rx=%d ", n, RxState );
+  if( RxState == 1 ) printf("OK! ");
+  else
   {
+    printf("FAIL\r\n");
     Status = -1;
-    printf("Tx%d_SetHigh but Rx%d_State=%d\r\n", n, n, RxState);
-    TxRx_ErrorHandler();
+  //TxRx_ErrorHandler();
     LED_On( n );
     return -1;
   }
   Tx_SetLow( n );
-  HAL_Delay( milliseconds );
+  HAL_Delay( Duration );
   RxState = Rx_ReadState(n);
-  if( RxState != 0 ) 
+  printf("Tx=0 Rx=%d ", RxState );
+  if( RxState == 0 ) printf("OK! ");
+  else
   {
+    printf("FAIL\r\n");
     Status = -1;
-    printf("Tx%d_SetLow but Rx%d_State=%d\r\n", n, n, RxState);
-    TxRx_ErrorHandler();
+  //TxRx_ErrorHandler();
     LED_On( n );
     return -1;
   }
+  printf("\r\n");
   LED_Pulsate( n );
+  Tx_SetLevel( n, TxState ); // Read initial Tx<n> state
   return Status;
 }
 
