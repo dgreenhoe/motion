@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "LEDs.h"
 #include "TxRx.h"
+#include "Timers.h"
 #include "UserButton.h"
 #include "AppMain.h"
 
@@ -42,6 +43,8 @@ extern UART_HandleTypeDef huart3;
 int AppMain(void)
 {
   int DetectOn=0, RxState=0;
+  Timer6_Init();
+
   DAC_Init();
   DMA_Init();
   DMA_Config( &hdma_dac1_ch1, DMA1_Stream0 );
@@ -93,4 +96,29 @@ int AppMain(void)
     }
   }
   return -1;
+}
+
+
+//-----------------------------------------------------------------------------
+//! \brief Display HAL Status
+//! \param[in] Status HAL Status code
+//! \param[in] ShowOK If Status=HAL_OK, hide any messages.
+//! \return Return Status
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef Display_HAL_Status( HAL_StatusTypeDef const Status, bool const ShowOK )
+{
+  if( ShowOK || Status!=HAL_OK )
+  {
+    printf("HAL Status = %d ", Status);
+    switch( Status )
+    {
+      case HAL_OK      : printf("(OK)"      ); break;
+      case HAL_ERROR   : printf("(Error)"   ); break;
+      case HAL_BUSY    : printf("(Busy)"    ); break;
+      case HAL_TIMEOUT : printf("(TimeOut)" ); break;
+      default          : printf("(Unknown)" ); break;
+    }
+    printf("\r\n");
+  }
+  return Status;
 }

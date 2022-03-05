@@ -1,3 +1,3 @@
-void DAC_Init(void);
-void DAC_Start( void );
-void DAC_DMA_Start( uint32_t * const dacBuf, uint32_t const Length );
+HAL_StatusTypeDef DAC_Init( void );
+HAL_StatusTypeDef DAC_Start( void );
+HAL_StatusTypeDef DAC_DMA_Start( uint32_t * const dacBuf, uint32_t const Length );

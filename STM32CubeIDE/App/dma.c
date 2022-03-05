@@ -30,6 +30,7 @@ void DMA_Init( void )
 //-----------------------------------------------------------------------------
 //! \brief Configure Memory-to-DAC DMA stream
 //! \param[in] hdma Pointer to DMA handle
+// reference: http://elastic-notes.blogspot.com/p/blog-page_1.html
 //-----------------------------------------------------------------------------
 void DMA_Config( DMA_HandleTypeDef *hdma, void * Stream )
 {
