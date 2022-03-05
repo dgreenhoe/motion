@@ -13,6 +13,7 @@
 #include "TxRx.h"
 #include "Timers.h"
 #include "UserButton.h"
+#include "Audio.h"
 #include "AppMain.h"
 
 extern ADC_HandleTypeDef  hadc1;
@@ -43,28 +44,23 @@ extern UART_HandleTypeDef huart3;
 int AppMain(void)
 {
   int DetectOn=0, RxState=0;
-  Timer6_Init();
+  uint8_t oneByte;
+  uint32_t const FundamentalFrequency = 440;
 
+  Timer6_Init();
   DAC_Init();
   DMA_Init();
   DMA_Config( &hdma_dac1_ch1, DMA1_Stream0 );
   DMA_Config( &hdma_dac1_ch2, DMA1_Stream1 );
-//  __HAL_RCC_TIM3_CLK_ENABLE();
-//  HAL_TIM_ConfigClockSource();
-//  //HAL_TIM_Base_MspInit();
-//  HAL_TIM_Base_Init();
-//  //HAL_TIM_IC_MspInit();
-//  HAL_TIM_IC_Init();
-//  HAL_TIM_IC_Start();
   Splash();
   Menu_Options( );
-  uint8_t oneByte;
-  //uint32_t dacBuf[16] = {0x0ff, 0x1ff, 0x2ff, 0x3ff, 0x4ff, 0x5ff, 0x6ff, 0x7ff, 0x8ff, 0x9ff, 0xaff, 0xbff, 0xcff, 0xdff, 0xeff, 0xfff};
-  uint16_t dacBuf[16] = {0x0ff, 0x1ff, 0x2ff, 0x3ff, 0x4ff, 0x5ff, 0x6ff, 0x7ff, 0x8ff, 0x9ff, 0xaff, 0xbff, 0xcff, 0xdff, 0xeff, 0xfff};
-  DAC_Start();
-  DAC_DMA_Start( (uint32_t*)dacBuf, 16 ); //sizeof(dacBuf)/sizeof(uint32_t) ;
-  HAL_TIM_Base_Start( &htim6 );
+  Timer6_Start( );
+//Audio_DMA_SawTooth( FundamentalFrequency );
+//Audio_DMA_Triangle( FundamentalFrequency );
+  Audio_DMA_Square(   FundamentalFrequency );
+
   TxRx_TestAll( );
+
   while (1)
   {
     if( GetOneByte( &oneByte ) )
@@ -97,7 +93,6 @@ int AppMain(void)
   }
   return -1;
 }
-
 
 //-----------------------------------------------------------------------------
 //! \brief Display HAL Status

@@ -11,6 +11,15 @@ static HAL_StatusTypeDef DAC_ErrorHandler( HAL_StatusTypeDef const Status, bool 
 extern DAC_HandleTypeDef hdac1;
 
 //-----------------------------------------------------------------------------
+//! \brief Get Sampling Frequency for DAC
+//-----------------------------------------------------------------------------
+uint32_t DAC_GetSamplingFrequency(void)
+{
+  uint32_t const SamplingFrequency = 44100;
+  return SamplingFrequency;
+}
+
+//-----------------------------------------------------------------------------
 //! \brief Configure Memory-to-DAC DMA stream
 //! \param[in] hdac Pointer to DAC handle
 //! \param[in] hdma Pointer to DMA handle
@@ -19,22 +28,24 @@ HAL_StatusTypeDef DAC_Init(void)
 {
   bool                const ShowOK    = true;
   DAC_HandleTypeDef * const Handle    = &hdac1; 
-  DAC_ChannelConfTypeDef sConfig = {0};
-  hdac1.Instance = DAC1;
-  if (HAL_DAC_Init( Handle ) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  Handle->Instance                    = DAC1;
+  DAC_ChannelConfTypeDef   sConfig    = {0};
   sConfig.DAC_SampleAndHold           = DAC_SAMPLEANDHOLD_DISABLE;
   sConfig.DAC_Trigger                 = DAC_TRIGGER_T6_TRGO;
   sConfig.DAC_OutputBuffer            = DAC_OUTPUTBUFFER_ENABLE;
   sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_DISABLE;
   sConfig.DAC_UserTrimming            = DAC_TRIMMING_FACTORY;
-  HAL_StatusTypeDef const Status1     = HAL_DAC_ConfigChannel( &hdac1, &sConfig, DAC_CHANNEL_1 );
-  HAL_StatusTypeDef const Status2     = HAL_DAC_ConfigChannel( &hdac1, &sConfig, DAC_CHANNEL_2 );
+  HAL_StatusTypeDef   const Status1   = HAL_DAC_Init( Handle );
+  HAL_StatusTypeDef   const Status2   = HAL_DAC_ConfigChannel( Handle, &sConfig, DAC_CHANNEL_1 );
+  HAL_StatusTypeDef   const Status3   = HAL_DAC_ConfigChannel( Handle, &sConfig, DAC_CHANNEL_2 );
   DAC_ErrorHandler( Status1, ShowOK );
   DAC_ErrorHandler( Status2, ShowOK );
-  return Status1!=HAL_OK? Status1 : Status2;
+  DAC_ErrorHandler( Status3, ShowOK );
+  HAL_StatusTypeDef         Status;
+  if(      Status1 != HAL_OK ) Status = Status1;
+  else if( Status2 != HAL_OK ) Status = Status2;
+  else                         Status = Status3;
+  return Status;
 }
 
 //-----------------------------------------------------------------------------

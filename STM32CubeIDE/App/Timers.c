@@ -30,25 +30,34 @@ extern TIM_HandleTypeDef htim17;
 //-----------------------------------------------------------------------------
 HAL_StatusTypeDef Timer6_Init(void)
 {
-  bool const ShowOK = true;
-  HAL_StatusTypeDef Status = HAL_OK;
+  bool               const ShowOK = true;
+  TIM_HandleTypeDef* const Handle = &htim6;
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  htim6.Instance = TIM6;
-  htim6.Init.Prescaler         = 127;
-  htim6.Init.CounterMode       = TIM_COUNTERMODE_UP;
-  htim6.Init.Period            = 16;
-  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
-  {
-    Timer_ErrorHandler( Status, ShowOK );
-  }
+  Handle->Instance               = TIM6;
+  Handle->Init.Prescaler         = 127;
+  Handle->Init.CounterMode       = TIM_COUNTERMODE_UP;
+  Handle->Init.Period            = 16;
+  Handle->Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
-  {
-    Timer_ErrorHandler( Status, ShowOK );
-  }
+  HAL_StatusTypeDef const Status1 = HAL_TIM_Base_Init( Handle );
+  HAL_StatusTypeDef const Status2 = HAL_TIMEx_MasterConfigSynchronization( Handle, &sMasterConfig);
+  Timer_ErrorHandler( Status1, ShowOK );
+  Timer_ErrorHandler( Status2, ShowOK );
+  HAL_StatusTypeDef const Status  = Status1!=HAL_OK? Status1 : Status2;
   return Status;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Start Timer 6
+//! \return Return Status
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef Timer6_Start(void)
+{
+  bool               const ShowOK = true;
+  TIM_HandleTypeDef* const Handle = &htim6;
+  HAL_StatusTypeDef  const Status = HAL_TIM_Base_Start( Handle );
+  return Timer_ErrorHandler( Status, ShowOK );
 }
 
 //-----------------------------------------------------------------------------
