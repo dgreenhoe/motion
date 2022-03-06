@@ -4,6 +4,7 @@
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 #include "main.h"
 #include "dac.h"
 #include "dma.h"
@@ -80,6 +81,31 @@ int Audio_DMA_Square( uint32_t const FundamentalFrequency )
   if( NumSamplesInPeriod > dacBufSize ) return Audio_ErrorHandler( -1, ShowOK );
   for( n=0; n<NumSamplesInPeriod/2; n++ ) dacBuf[n] = 0x0000;
   for(    ; n<NumSamplesInPeriod  ; n++ ) dacBuf[n] = 0x0FFF;
+  HAL_StatusTypeDef const Status1   = DAC_Start( );
+  HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Generate a Cosine waveform using DAC and DMA peripherals.
+//! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
+{
+  bool              const ShowOK             = true;
+  uint32_t          const SamplingFrequency  = DAC_GetSamplingFrequency();
+  uint32_t          const NumSamplesInPeriod = SamplingFrequency / FundamentalFrequency;
+  if( NumSamplesInPeriod > dacBufSize ) return Audio_ErrorHandler( -1, ShowOK );
+  double theta;
+  for( uint32_t n=0; n<NumSamplesInPeriod  ; n++ ) 
+  {
+    theta = 2.0 * M_PI * (double)n / (double)NumSamplesInPeriod;
+    dacBuf[n] = (uint16_t)( (double)0x0FFF * ( cos( theta ) + 1.0 ) * 0.5  );
+  }
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );

@@ -57,7 +57,8 @@ int AppMain(void)
   Timer6_Start( );
 //Audio_DMA_SawTooth( FundamentalFrequency );
 //Audio_DMA_Triangle( FundamentalFrequency );
-  Audio_DMA_Square(   FundamentalFrequency );
+//Audio_DMA_Square(   FundamentalFrequency );
+  Audio_DMA_Cosine(   FundamentalFrequency );
 
   TxRx_TestAll( );
 
