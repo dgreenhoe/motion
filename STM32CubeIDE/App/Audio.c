@@ -25,6 +25,19 @@ static uint32_t dacBufSize = sizeof(dacBuf) / sizeof(uint16_t);
 //}
 
 //-----------------------------------------------------------------------------
+//! \brief Silence all audio.
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_Silence( void )
+{
+  bool              const ShowOK  = true;
+  HAL_StatusTypeDef const Status1 = DAC_Stop( );
+  int const Status = ( Status1==HAL_OK )?  1 : -1;
+  Audio_ErrorHandler( Status, ShowOK );
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
 //! \brief Generate a SawTooth waveform using DAC and DMA peripherals.
 //! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
 //! \return Returns -1 in event of an Error, and 1 otherwise.
@@ -37,6 +50,7 @@ int Audio_DMA_SawTooth( uint32_t const FundamentalFrequency )
   if( NumSamplesInPeriod > dacBufSize ) return Audio_ErrorHandler(-1, ShowOK);
   for( uint32_t n=0; n<NumSamplesInPeriod; n++ )
     dacBuf[n] = (0x0FFF * n) / (NumSamplesInPeriod-1);
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
@@ -59,6 +73,7 @@ int Audio_DMA_Triangle( uint32_t const FundamentalFrequency )
   for(    ; n<NumSamplesInPeriod  ; n++ ) dacBuf[n] = 0x0FFF + 0x0FFF - (0x0FFF * n) / (NumSamplesInPeriod/2 - 0 );
 //printf( "NumSamplesInPeriod = %ld\r\n", NumSamplesInPeriod );
 //for( n=NumSamplesInPeriod/2-10; n<NumSamplesInPeriod/2+10; n++ ) printf("dacBuf[%ld] = 0x%04X = %d \r\n", n, dacBuf[n], dacBuf[n] );
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
@@ -81,6 +96,7 @@ int Audio_DMA_Square( uint32_t const FundamentalFrequency )
   if( NumSamplesInPeriod > dacBufSize ) return Audio_ErrorHandler( -1, ShowOK );
   for( n=0; n<NumSamplesInPeriod/2; n++ ) dacBuf[n] = 0x0000;
   for(    ; n<NumSamplesInPeriod  ; n++ ) dacBuf[n] = 0x0FFF;
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
@@ -106,6 +122,7 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
     theta = 2.0 * M_PI * (double)n / (double)NumSamplesInPeriod;
     dacBuf[n] = (uint16_t)( (double)0x0FFF * ( cos( theta ) + 1.0 ) * 0.5  );
   }
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
@@ -121,9 +138,7 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
 //-----------------------------------------------------------------------------
 static int Audio_ErrorHandler( int const Status, bool const ShowOK )
 {
-  if( Status<0 )
-  {
-    printf("Audio Error\r\n");
-  }
+  if( ShowOK && Status>=0 ) printf("Audio OK\r\n");
+  if( Status<0 )            printf("Audio Error\r\n");
   return Status;
 }

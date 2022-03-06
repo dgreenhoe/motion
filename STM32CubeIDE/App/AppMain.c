@@ -45,7 +45,6 @@ int AppMain(void)
 {
   int DetectOn=0, RxState=0;
   uint8_t oneByte;
-  uint32_t const FundamentalFrequency = 440;
 
   Timer6_Init();
   DAC_Init();
@@ -55,11 +54,6 @@ int AppMain(void)
   Splash();
   Menu_Options( );
   Timer6_Start( );
-//Audio_DMA_SawTooth( FundamentalFrequency );
-//Audio_DMA_Triangle( FundamentalFrequency );
-//Audio_DMA_Square(   FundamentalFrequency );
-  Audio_DMA_Cosine(   FundamentalFrequency );
-
   TxRx_TestAll( );
 
   while (1)

@@ -6,6 +6,7 @@
 #include "main.h"
 #include "LEDs.h"
 #include "TxRx.h"
+#include "Audio.h"
 #include "menu.h"
 extern UART_HandleTypeDef huart3;
 static char* Number_to_BinaryString( const int Number, char *buf );
@@ -29,7 +30,10 @@ int Menu_Options(void)
   printf("  N: All    LED ON         ");   printf("  n: All    Tx ON\r\n"      );
   printf("  F: All    LED OFF        ");   printf("  f: All    Tx OFF\r\n"     );
   printf("  t: Test all TxRx channels");   printf("  l: Sequence through all LEDs\r\n");
-  printf("  R: Read Rx & Tx Values");   printf("\r\n"                       );
+  printf("  C: Cosine 440 Hz         ");   printf("  S: Square 440 Hz\r\n"     );
+  printf("  W: Sawtooth 440 Hz       ");   printf("  T: Triangle 440 Hz\r\n"   );
+  printf("  Q: Quiet                 ");   printf("\r\n"                       );
+  printf("   : Read Rx & Tx Values"   );   printf("\r\n"                       );
   return 0;
 }
 
@@ -40,6 +44,7 @@ int Menu_Processing( const uint8_t oneChar )
 {
   char buf[80];
   int  RxValue, TxValue;
+  uint32_t const FundamentalFrequency = 440;
   switch( oneChar )
   {
     case 'M':                                    Menu_Options()  ;  break;
@@ -70,7 +75,11 @@ int Menu_Processing( const uint8_t oneChar )
     case 'F':  printf("All Tx OFF\r\n"        ); Tx_SetLowAll()  ;  break;
     case 'l':  printf("Sequence through 8 LEDs\r\n"); LED_Sequence(250); break;
     case 't':  printf("Test All TxRx Channels\r\n");  TxRx_TestAll( );   break;
-    case 'R':
+    case 'C':  printf("Cosine 440 Hz\r\n");      Audio_DMA_Cosine(   FundamentalFrequency ); break;
+    case 'W':  printf("SawTooth 440 Hz\r\n");    Audio_DMA_SawTooth( FundamentalFrequency ); break;
+    case 'T':  printf("Triangle 440 Hz\r\n");    Audio_DMA_Triangle( FundamentalFrequency ); break;
+    case 'S':  printf("Square 440 Hz\r\n");      Audio_DMA_Square(   FundamentalFrequency ); break;
+    case 'Q':  printf("Quiet/Silence\r\n");      Audio_Silence( );                           break;
     case ' ':
       RxValue = Rx_ReadStateAll();
       TxValue = Tx_ReadStateAll();
