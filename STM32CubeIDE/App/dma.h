@@ -1,2 +1,2 @@
 void DMA_Init( void );
-void DMA_Config( DMA_HandleTypeDef *hdma, void * Stream );
+void DMA_Config( int const Normal );

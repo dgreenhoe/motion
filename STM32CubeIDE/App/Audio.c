@@ -9,20 +9,30 @@
 #include "dac.h"
 #include "dma.h"
 #include "Audio.h"
-
+#include "AudioData.h"
 static int Audio_ErrorHandler( int const Status, bool const ShowOK );
 
-static uint16_t dacBuf[4096];
+//static uint16_t dacBuf[200*1024-(85952/2)+1];
+static uint16_t dacBuf[158*1024];
 static uint32_t dacBufSize = sizeof(dacBuf) / sizeof(uint16_t);
 
 //-----------------------------------------------------------------------------
 //! \brief Initialize Audio
 //! \return Returns -1 in event of an Error, and 1 otherwise.
 //-----------------------------------------------------------------------------
-//int Audio_Init(void)
-//{
-//  return 1;
-//}
+int Audio_Init(void)
+{
+  bool              const ShowOK  = true;
+  uint32_t const NumSamples = sizeof( AudioData ) / sizeof( uint16_t );
+  if( NumSamples > dacBufSize ) return Audio_ErrorHandler(-1, ShowOK);
+  for( uint32_t n=0; n<NumSamples; n++ )// Copy data from Flash to RAM
+    dacBuf[n] = AudioData[n];
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
+  HAL_StatusTypeDef const Status1   = DAC_Start( );
+  HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
+  int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
+  return Status;
+}
 
 //-----------------------------------------------------------------------------
 //! \brief Silence all audio.
@@ -132,6 +142,24 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
 }
 
 //-----------------------------------------------------------------------------
+//! \brief Play AudioData
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_AudioData(void)
+{
+  bool              const ShowOK  = true;
+  uint32_t const NumSamples = sizeof( AudioData ) / sizeof( uint16_t );
+  if( NumSamples > dacBufSize ) return Audio_ErrorHandler(-1, ShowOK);
+  for( uint32_t n=0; n<NumSamples; n++ )// Copy data from Flash to RAM
+    dacBuf[n] = AudioData[n];
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
+  HAL_StatusTypeDef const Status1   = DAC_Start( );
+  HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
+  int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
 //! \brief Generate a Triangle waveform using DAC and DMA peripherals.
 //! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
 //! \return Returns -1 in event of an Error, and 1 otherwise.
@@ -142,3 +170,4 @@ static int Audio_ErrorHandler( int const Status, bool const ShowOK )
   if( Status<0 )            printf("Audio Error\r\n");
   return Status;
 }
+

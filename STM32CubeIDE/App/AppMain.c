@@ -45,15 +45,15 @@ int AppMain(void)
 {
   int DetectOn=0, RxState=0;
   uint8_t oneByte;
-
+  int const Normal = 1;
   Timer6_Init();
   DAC_Init();
   DMA_Init();
-  DMA_Config( &hdma_dac1_ch1, DMA1_Stream0 );
-  DMA_Config( &hdma_dac1_ch2, DMA1_Stream1 );
+  DMA_Config( Normal );
   Splash();
   Menu_Options( );
   Timer6_Start( );
+  Audio_AudioData();
   TxRx_TestAll( );
 
   while (1)
@@ -81,7 +81,11 @@ int AppMain(void)
       if( RxState != 0xFF )
       {
         LED_Red_On();
-        HAL_Delay(1000);
+        Audio_AudioData();
+        HAL_Delay(1500);
+        Audio_AudioData();
+        HAL_Delay(1500);
+        Audio_AudioData();
         LED_Red_Off();
       }
     }
