@@ -116,7 +116,7 @@ static char* Number_to_BinaryString( const int Number, char *buf )
 //-----------------------------------------------------------------------------
 void Splash(void)
 {
-  printf("=======================\r\n");
-  printf("| Laser Motion Sensor |\r\n");
-  printf("=======================\r\n");
+  printf("=============================\r\n");
+  printf("| Laser Motion Sensor rev0.1|\r\n");
+  printf("=============================\r\n");
 }

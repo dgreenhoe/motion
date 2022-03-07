@@ -28,6 +28,11 @@ HAL_StatusTypeDef DAC_Init(void)
 {
   bool                const ShowOK    = true;
   DAC_HandleTypeDef * const Handle    = &hdac1; 
+  uint32_t            const Channel1  = DAC_CHANNEL_1;
+  uint32_t            const Channel2  = DAC_CHANNEL_2;
+  uint32_t            const Alignment = DAC_ALIGN_12B_R;
+  uint32_t            const InitialValue = 0x0800;
+
   Handle->Instance                    = DAC1;
   DAC_ChannelConfTypeDef   sConfig    = {0};
   sConfig.DAC_SampleAndHold           = DAC_SAMPLEANDHOLD_DISABLE;
@@ -36,8 +41,11 @@ HAL_StatusTypeDef DAC_Init(void)
   sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_DISABLE;
   sConfig.DAC_UserTrimming            = DAC_TRIMMING_FACTORY;
   HAL_StatusTypeDef   const Status1   = HAL_DAC_Init( Handle );
-  HAL_StatusTypeDef   const Status2   = HAL_DAC_ConfigChannel( Handle, &sConfig, DAC_CHANNEL_1 );
-  HAL_StatusTypeDef   const Status3   = HAL_DAC_ConfigChannel( Handle, &sConfig, DAC_CHANNEL_2 );
+  HAL_StatusTypeDef   const Status2   = HAL_DAC_ConfigChannel( Handle, &sConfig, Channel1 );
+  HAL_StatusTypeDef   const Status3   = HAL_DAC_ConfigChannel( Handle, &sConfig, Channel2 );
+  HAL_StatusTypeDef   const Status4   = HAL_DAC_SetValue(      Handle, Channel1, Alignment, InitialValue  );
+  HAL_StatusTypeDef   const Status5   = HAL_DAC_SetValue(      Handle, Channel2, Alignment, InitialValue  );
+
   DAC_ErrorHandler( Status1, ShowOK );
   DAC_ErrorHandler( Status2, ShowOK );
   DAC_ErrorHandler( Status3, ShowOK );
@@ -57,8 +65,34 @@ HAL_StatusTypeDef DAC_Start( void )
   DAC_HandleTypeDef * const Handle   = &hdac1; 
   uint32_t            const Channel1 = DAC_CHANNEL_1;
   uint32_t            const Channel2 = DAC_CHANNEL_2;
+  uint32_t            const Alignment = DAC_ALIGN_12B_R;
+  uint32_t            const InitialValue = 0x0800;
+
   HAL_StatusTypeDef   const Status1  = HAL_DAC_Start( Handle, Channel1 );
   HAL_StatusTypeDef   const Status2  = HAL_DAC_Start( Handle, Channel2 );
+  HAL_StatusTypeDef   const Status4   = HAL_DAC_SetValue(      Handle, Channel1, Alignment, InitialValue  );
+  HAL_StatusTypeDef   const Status5   = HAL_DAC_SetValue(      Handle, Channel2, Alignment, InitialValue  );
+  DAC_ErrorHandler( Status1, ShowOK );
+  DAC_ErrorHandler( Status2, ShowOK );
+  return Status1!=HAL_OK? Status1 : Status2;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Start DAC
+//-----------------------------------------------------------------------------
+HAL_StatusTypeDef DAC_SetValue( uint32_t const DataValue )
+{
+  bool                const ShowOK   = true;
+  DAC_HandleTypeDef * const Handle   = &hdac1; 
+  uint32_t            const Channel1 = DAC_CHANNEL_1;
+  uint32_t            const Channel2 = DAC_CHANNEL_2;
+  uint32_t            const Alignment = DAC_ALIGN_12B_R;
+  
+
+  HAL_StatusTypeDef   const Status1  = HAL_OK; //HAL_DAC_Start( Handle, Channel1 );
+  HAL_StatusTypeDef   const Status2  = HAL_OK; //HAL_DAC_Start( Handle, Channel2 );
+  HAL_StatusTypeDef   const Status4   = HAL_DAC_SetValue(      Handle, Channel1, Alignment, DataValue  );
+  HAL_StatusTypeDef   const Status5   = HAL_DAC_SetValue(      Handle, Channel2, Alignment, DataValue  );
   DAC_ErrorHandler( Status1, ShowOK );
   DAC_ErrorHandler( Status2, ShowOK );
   return Status1!=HAL_OK? Status1 : Status2;

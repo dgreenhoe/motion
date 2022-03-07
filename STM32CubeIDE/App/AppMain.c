@@ -53,6 +53,7 @@ int AppMain(void)
   Splash();
   Menu_Options( );
   Timer6_Start( );
+  DAC_Start( );
   Audio_AudioData();
   TxRx_TestAll( );
 

@@ -152,8 +152,8 @@ int Audio_AudioData(void)
   if( NumSamples > dacBufSize ) return Audio_ErrorHandler(-1, ShowOK);
   for( uint32_t n=0; n<NumSamples; n++ )// Copy data from Flash to RAM
     dacBuf[n] = AudioData[n];
-  HAL_StatusTypeDef const Status3   = DAC_Stop( );
-  HAL_StatusTypeDef const Status1   = DAC_Start( );
+  HAL_StatusTypeDef const Status3   = HAL_OK;  //DAC_Stop( );
+  HAL_StatusTypeDef const Status1   = HAL_OK; //DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
