@@ -30,6 +30,9 @@ int Audio_Init(void)
   HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
 }
@@ -64,8 +67,24 @@ int Audio_DMA_SawTooth( uint32_t const FundamentalFrequency )
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Generate a Triangle waveform using DAC and DMA peripherals.
+//! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_DumpDACbuf( uint32_t const Start, uint32_t const NumSamples )
+{
+  printf( "NumSamples = %ld\r\n", NumSamples );
+  for( uint32_t n=Start; n<NumSamples; n++ ) 
+    printf("dacBuf[%ld] = 0x%04X = %d \r\n", n, dacBuf[n], dacBuf[n] );
+  return 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -90,6 +109,7 @@ int Audio_DMA_Triangle( uint32_t const FundamentalFrequency )
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
 }
@@ -114,6 +134,7 @@ int Audio_DMA_Square( uint32_t const FundamentalFrequency )
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
 }
@@ -141,6 +162,7 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
 }
@@ -160,6 +182,9 @@ int Audio_AudioData(void)
   HAL_StatusTypeDef const Status1   = HAL_OK; //DAC_Start( );
   DMA_Config( 1 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
 }

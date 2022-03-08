@@ -69,7 +69,6 @@ void DMA_Config( int const Normal )
     Handle = Handle2;
     Stream = Stream1;
   }
-
 }
 
 //-----------------------------------------------------------------------------

@@ -32,7 +32,8 @@ int Menu_Options(void)
   printf("  t: Test all TxRx channels");   printf("  l: Sequence through all LEDs\r\n");
   printf("  C: Cosine 440 Hz         ");   printf("  S: Square 440 Hz\r\n"     );
   printf("  W: Sawtooth 440 Hz       ");   printf("  T: Triangle 440 Hz\r\n"   );
-  printf("  Q: Quiet                 ");   printf("\r\n"                       );
+  printf("  A: Audio Clip            ");   printf("  \r\n"                     );
+  printf("  Q: Quiet                 ");   printf("  D: Dump 128 DAC buffer samples\r\n");
   printf("   : Read Rx & Tx Values"   );   printf("\r\n"                       );
   return 0;
 }
@@ -79,7 +80,9 @@ int Menu_Processing( const uint8_t oneChar )
     case 'W':  printf("SawTooth 440 Hz\r\n");    Audio_DMA_SawTooth( FundamentalFrequency ); break;
     case 'T':  printf("Triangle 440 Hz\r\n");    Audio_DMA_Triangle( FundamentalFrequency ); break;
     case 'S':  printf("Square 440 Hz\r\n");      Audio_DMA_Square(   FundamentalFrequency ); break;
+    case 'A':  printf("Audio Clip\r\n");         Audio_AudioData();                          break;
     case 'Q':  printf("Quiet/Silence\r\n");      Audio_Silence( );                           break;
+    case 'D':  printf("Dump DAC buffer\r\n");    Audio_DumpDACbuf( 0, 128 );                 break;
     case ' ':
       RxValue = Rx_ReadStateAll();
       TxValue = Tx_ReadStateAll();
@@ -116,7 +119,9 @@ static char* Number_to_BinaryString( const int Number, char *buf )
 //-----------------------------------------------------------------------------
 void Splash(void)
 {
-  printf("=============================\r\n");
-  printf("| Laser Motion Sensor rev0.1|\r\n");
-  printf("=============================\r\n");
+  printf(" ===================================== \r\n");
+  printf("| Laser Motion Sensor                 |\r\n");
+  printf("| Revision 1.0                        |\r\n");
+  printf("| https://github.com/dgreenhoe/motion |\r\n");
+  printf(" ===================================== \r\n");
 }
