@@ -62,6 +62,7 @@ int Audio_DMA_SawTooth( uint32_t const FundamentalFrequency )
     dacBuf[n] = (0x0FFF * n) / (NumSamplesInPeriod-1);
   HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
+  DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
@@ -85,6 +86,7 @@ int Audio_DMA_Triangle( uint32_t const FundamentalFrequency )
 //for( n=NumSamplesInPeriod/2-10; n<NumSamplesInPeriod/2+10; n++ ) printf("dacBuf[%ld] = 0x%04X = %d \r\n", n, dacBuf[n], dacBuf[n] );
   HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
+  DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
@@ -108,6 +110,7 @@ int Audio_DMA_Square( uint32_t const FundamentalFrequency )
   for(    ; n<NumSamplesInPeriod  ; n++ ) dacBuf[n] = 0x0FFF;
   HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
+  DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
@@ -134,6 +137,7 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
   }
   HAL_StatusTypeDef const Status3   = DAC_Stop( );
   HAL_StatusTypeDef const Status1   = DAC_Start( );
+  DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
@@ -154,6 +158,7 @@ int Audio_AudioData(void)
     dacBuf[n] = AudioData[n];
   HAL_StatusTypeDef const Status3   = HAL_OK;  //DAC_Stop( );
   HAL_StatusTypeDef const Status1   = HAL_OK; //DAC_Start( );
+  DMA_Config( 1 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamples );
   int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
   return Status;
