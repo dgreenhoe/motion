@@ -1,6 +1,7 @@
 //=============================================================================
-// DAC Configuration
-// Daniel J. Greenhoe
+//! \file Audio.c
+//!       Audio functions
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>

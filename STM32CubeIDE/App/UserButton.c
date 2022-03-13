@@ -1,5 +1,7 @@
 //=============================================================================
-// Daniel J. Greenhoe
+//! \file UserButton.c
+//!       Nucleo-144 Blue button handling
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>

@@ -1,6 +1,7 @@
 //=============================================================================
-// Application
-// Daniel J. Greenhoe
+//! \file LEDs.c
+//!       LED handling
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include<stdio.h>
 #include "main.h"

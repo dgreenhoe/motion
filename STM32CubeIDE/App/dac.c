@@ -1,6 +1,7 @@
 //=============================================================================
-// DAC Configuration
-// Daniel J. Greenhoe
+//! \file dac.c
+//!       DAC Configuration
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>
@@ -12,6 +13,7 @@ extern DAC_HandleTypeDef hdac1;
 
 //-----------------------------------------------------------------------------
 //! \brief Get Sampling Frequency for DAC
+//! \return Sampling Frequency in Hertz
 //-----------------------------------------------------------------------------
 uint32_t DAC_GetSamplingFrequency(void)
 {
@@ -23,6 +25,7 @@ uint32_t DAC_GetSamplingFrequency(void)
 //! \brief Configure Memory-to-DAC DMA stream
 //! \param[in] hdac Pointer to DAC handle
 //! \param[in] hdma Pointer to DMA handle
+//! \return Return Status
 //-----------------------------------------------------------------------------
 HAL_StatusTypeDef DAC_Init(void)
 {
@@ -132,6 +135,8 @@ HAL_StatusTypeDef DAC_Stop( void )
 
 //-----------------------------------------------------------------------------
 //! \brief Start DAC DMA transfers
+//! \param[in] dacBuf   Pointer to DAC buffer
+//! \param[in] Length   Number of valid elements in buffer
 //! \return Return Status
 //-----------------------------------------------------------------------------
 HAL_StatusTypeDef DAC_DMA_Start( uint32_t * const dacBuf, uint32_t const Length )

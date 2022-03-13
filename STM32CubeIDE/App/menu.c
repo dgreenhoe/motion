@@ -1,5 +1,7 @@
 //=============================================================================
-// Daniel J. Greenhoe
+//! \file menu.c
+//!       Menu configuration
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>

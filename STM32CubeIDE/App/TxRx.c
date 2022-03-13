@@ -1,5 +1,7 @@
 //=============================================================================
-// Daniel J. Greenhoe
+//! \file TxRx.c
+//!       Laser Transmit/Receive functions
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>

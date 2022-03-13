@@ -1,5 +1,7 @@
 //=============================================================================
-// Daniel J. Greenhoe
+//! \file AppMain.c
+//!       Local main function
+//! \author Daniel J. Greenhoe
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>

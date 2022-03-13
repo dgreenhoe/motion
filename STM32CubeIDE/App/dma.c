@@ -1,7 +1,10 @@
 //=============================================================================
-// DMA configuration
-// Daniel J. Greenhoe
-// Reference: https://www.eevblog.com/forum/microcontrollers/stm32f407vge-dac-using-dma/
+//! \file dma.c
+//!       DMA configuration
+//!       \cite stm_um2217
+//!       \cite stm_rm0468
+//! \author Daniel J. Greenhoe
+//        Reference: https://www.eevblog.com/forum/microcontrollers/stm32f407vge-dac-using-dma/
 //=============================================================================
 #include <stdio.h>
 #include <stdbool.h>
