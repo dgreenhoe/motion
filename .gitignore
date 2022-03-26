@@ -1,7 +1,11 @@
 *.jpg
 *.dip~
 *.eli~
-Sound/*
+*.mp3
+*.ogg
+*.wav
+*.mat
+Sound/*.h
 Doc/*
 *.dch~
 *.lib~
@@ -14,3 +18,9 @@ Bill-of-Materials.*
 */Gerbers
 Nucleo144_STM32H723ZG/*
 STM32CubeIDE/Debug/*
+*.prj
+STM32CubeIDE/App/AudioData.h
+*/latex/*
+*/html/*
+Testing/*
+Photo/*
