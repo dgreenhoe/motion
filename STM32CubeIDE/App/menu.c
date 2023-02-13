@@ -63,7 +63,7 @@ int Menu_Processing( const uint8_t oneChar )
     case '%':  printf("Toggle LED 5\r\n"      ); LED_Toggle( 5 ) ;  break;
     case '^':  printf("Toggle LED 6\r\n"      ); LED_Toggle( 6 ) ;  break;
     case '&':  printf("Toggle LED 7\r\n"      ); LED_Toggle( 7 ) ;  break;
-    case '`':
+    case '`':  printf("All LEDs Off\r\n"      ); LED_AllOff()    ;  break;
     case '0':  printf("Toggle Tx 0\r\n"       ); Tx_Toggle( 0 )  ;  break;
     case '1':  printf("Toggle Tx 1\r\n"       ); Tx_Toggle( 1 )  ;  break;
     case '2':  printf("Toggle Tx 2\r\n"       ); Tx_Toggle( 2 )  ;  break;

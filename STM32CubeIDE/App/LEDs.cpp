@@ -26,6 +26,7 @@ extern "C" void LED_Grn_Off(void);
 extern "C" void LED_Toggle( int n );
 extern "C" void LED_On( int n );
 extern "C" void LED_Off( int n );
+extern "C" void LED_AllOff( void );
 extern "C" void LED_Sequence(uint32_t delay);
 extern "C" void LED_Pulsate( int n );
 
@@ -82,6 +83,15 @@ void LED_Off( int n )
   GPIO_TypeDef * const Bus = LED_Bus[n];
   uint16_t       const Pin = LED_Pin[n];
   HAL_GPIO_WritePin( Bus, Pin, GPIO_PIN_RESET );
+}
+
+//-----------------------------------------------------------------------------
+//! \brief All LEDs Off
+//-----------------------------------------------------------------------------
+void LED_AllOff( void )
+{
+  const int NumLEDs = sizeof(LED_Pin) / sizeof(uint16_t);
+  for( int n=0; n<NumLEDs; n++ ) LED_Off( n );
 }
 
 //-----------------------------------------------------------------------------

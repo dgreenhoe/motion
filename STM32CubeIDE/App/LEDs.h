@@ -21,5 +21,6 @@ void LED_Grn_Off(void);
 void LED_Toggle( int n );
 void LED_On( int n );
 void LED_Off( int n );
+void LED_AllOff( void );
 void LED_Sequence(uint32_t delay);
 void LED_Pulsate( int n );
