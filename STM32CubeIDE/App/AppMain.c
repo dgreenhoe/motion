@@ -57,7 +57,8 @@ int AppMain(void)
   Timer6_Start( );
   DAC_Start( );
   Audio_AudioData();
-  TxRx_TestAll( );
+//TxRx_TestAll( );
+  LED_AllOff();
 
   while (1)
   {

@@ -79,10 +79,13 @@ int Menu_Processing( const uint8_t oneChar )
     case 'l':  printf("Sequence through 8 LEDs\r\n"); LED_Sequence(250); break;
     case 't':  printf("Test All TxRx Channels\r\n");  TxRx_TestAll( );   break;
     case 'C':  printf("Cosine 440 Hz\r\n");      Audio_DMA_Cosine(   FundamentalFrequency ); break;
+    case 'R':  printf("RNG\r\n");                Audio_DMA_RNG( );                           break;
+    case 'B':  printf("RNG2\r\n");               Audio_DMA_RNG2( );                          break;
     case 'W':  printf("SawTooth 440 Hz\r\n");    Audio_DMA_SawTooth( FundamentalFrequency ); break;
     case 'T':  printf("Triangle 440 Hz\r\n");    Audio_DMA_Triangle( FundamentalFrequency ); break;
     case 'S':  printf("Square 440 Hz\r\n");      Audio_DMA_Square(   FundamentalFrequency ); break;
     case 'A':  printf("Audio Clip\r\n");         Audio_AudioData();                          break;
+    case 'q':
     case 'Q':  printf("Quiet/Silence\r\n");      Audio_Silence( );                           break;
     case 'D':  printf("Dump DAC buffer\r\n");    Audio_DumpDACbuf( 0, 128 );                 break;
     case ' ':

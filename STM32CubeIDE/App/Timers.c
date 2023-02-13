@@ -24,7 +24,8 @@ extern TIM_HandleTypeDef htim17;
 
 //-----------------------------------------------------------------------------
 //! \brief Configure Memory-to-DAC DMA stream
-//! \details 96MHz / (127+1) / (16+1) = 44.11765 kHz
+//! \details 96MHz / (127+1) / (16+1) =  44.11765 kHz
+//! \details 96MHz / ( 31+1) / (16+1) = 176.4706 kHz
 //! \param[in] hdac Pointer to DAC handle
 //! \param[in] hdma Pointer to DMA handle
 //-----------------------------------------------------------------------------
@@ -34,7 +35,8 @@ HAL_StatusTypeDef Timer6_Init(void)
   TIM_HandleTypeDef* const Handle = &htim6;
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   Handle->Instance               = TIM6;
-  Handle->Init.Prescaler         = 127;
+//Handle->Init.Prescaler         = 127;
+  Handle->Init.Prescaler         = 31;
   Handle->Init.CounterMode       = TIM_COUNTERMODE_UP;
   Handle->Init.Period            = 16;
   Handle->Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

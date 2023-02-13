@@ -12,6 +12,10 @@
 #include "Audio.h"
 #include "AudioData.h"
 static int Audio_ErrorHandler( int const Status, bool const ShowOK );
+extern RNG_HandleTypeDef hrng;
+extern DAC_HandleTypeDef hdac1;
+
+
 
 //static uint16_t dacBuf[200*1024-(85952/2)+1];
 static uint16_t dacBuf[158*1024];
@@ -161,6 +165,75 @@ int Audio_DMA_Cosine( uint32_t const FundamentalFrequency )
   HAL_StatusTypeDef const Status1   = DAC_Start( );
   DMA_Config( 0 );
   HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, NumSamplesInPeriod );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
+  int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Generate a RNG waveform using DAC and DMA peripherals.
+//! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_DMA_RNG( void )
+{
+  bool              const ShowOK             = true;
+  uint32_t          const SamplingFrequency  = DAC_GetSamplingFrequency();
+  uint32_t          const NumSamplesInPeriod = SamplingFrequency / 440ul; //FundamentalFrequency;
+  if( NumSamplesInPeriod > dacBufSize ) return Audio_ErrorHandler( -1, ShowOK );
+  double theta;
+  for( uint32_t n=0; n<dacBufSize  ; n++ ) 
+  {
+    uint32_t random32bit;
+    while( HAL_RNG_GenerateRandomNumber( &hrng, &random32bit ) != HAL_OK );
+    dacBuf[n] = (uint16_t)random32bit;
+  }
+  HAL_StatusTypeDef const Status3   = DAC_Stop( );
+  HAL_StatusTypeDef const Status1   = DAC_Start( );
+  DMA_Config( 0 );
+  HAL_StatusTypeDef const Status2   = DAC_DMA_Start( (uint32_t*)dacBuf, dacBufSize );
+  Audio_ErrorHandler( Status1, ShowOK );
+  Audio_ErrorHandler( Status2, ShowOK );
+  Audio_ErrorHandler( Status3, ShowOK );
+  int const Status = ( Status1==HAL_OK && Status2==HAL_OK )?  1 : -1;
+  //for( uint32_t n=0; n<(100*dacBufSize)  ;  ) 
+  //{
+  //  uint32_t random32bit;
+  //  theta = 2.0 * M_PI * (double)n / (double)NumSamplesInPeriod;
+  //  HAL_RNG_GenerateRandomNumber( &hrng, &random32bit );
+  //  dacBuf[n++] = (uint16_t)random32bit;
+  //  dacBuf[n++] = (uint16_t)(random32bit>>16);
+  //}
+  return Status;
+}
+
+//-----------------------------------------------------------------------------
+//! \brief Generate a RNG waveform using DAC and DMA peripherals.
+//! \param[in] FundamentalFrequency  Fundamental Frequency of waveform
+//! \return Returns -1 in event of an Error, and 1 otherwise.
+//-----------------------------------------------------------------------------
+int Audio_DMA_RNG2( void )
+{
+  bool              const ShowOK             = true;
+  float   const Frng      = 48e6;
+  float   const Nrng      = 256;
+  float   const Trng      = Nrng/Frng;
+  float   const Tduration = 10;
+  uint32_t const NumCycles = (uint32_t)( Tduration / Trng );
+  HAL_StatusTypeDef const Status1   = DAC_Stop( );
+  HAL_StatusTypeDef const Status2   = DAC_Start( );
+  for( uint32_t n=0; n<NumCycles ; n++ ) 
+  {
+    uint32_t random32bit;
+    while( HAL_RNG_GenerateRandomNumber( &hrng, &random32bit ) != HAL_OK );
+    uint32_t const x = random32bit & 0x0000FFFFul;
+    uint32_t const y = ((random32bit>>16) & 0x0000FFFFul);
+    HAL_DAC_SetValue( &hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, x );
+    HAL_DAC_SetValue( &hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, y );
+  }
+  HAL_StatusTypeDef const Status3 = DAC_Stop( );
   Audio_ErrorHandler( Status1, ShowOK );
   Audio_ErrorHandler( Status2, ShowOK );
   Audio_ErrorHandler( Status3, ShowOK );
